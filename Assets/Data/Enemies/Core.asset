@@ -1,0 +1,91 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-4192049674875220768
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5217ca7e468379548aeb12d7cac07e96, type: 3}
+  m_Name: Golem_SniperAttack
+  m_EditorClassIdentifier: 
+  actionName: "\u7CBE\u5BC6\u5C04\u6483"
+  telegraphMessage: "\u30B4\u30FC\u30EC\u30E0\u304C\u7167\u6E96\u3092\u5408\u308F\u305B\u3066\u3044\u308B..."
+  enemyAnimationTrigger: 
+  damage: 5
+  targetArea: -1
+  useShockwave: 0
+  slashAnimationTrigger: Slash
+  preAttackDelay: 0.5
+  animationDuration: 0.83
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 389afc11f36691e4b987752695ba08ee, type: 3}
+  m_Name: Core
+  m_EditorClassIdentifier: 
+  enemyName: "\u30B3\u30A2"
+  enemySprite: {fileID: -7215981363838934281, guid: 88cbd8812ee8101439e86fe3119cc618,
+    type: 3}
+  element: 0
+  elementPhases: 
+  guardReflectDamage: 1
+  elementAnimatorTriggers: []
+  flipSpriteInDialogue: 0
+  scale: {x: 10, y: 10, z: 1}
+  positionOffsetY: 0
+  animatorController: {fileID: 9100000, guid: 5d8a1fed4a375d14cb5ee1b8b5587be2, type: 2}
+  attackAnimTrigger: Action
+  moveAnimTrigger: Move
+  moveEndAnimTrigger: MoveEnd
+  deathAnimTrigger: Death
+  deathAnimationType: 1
+  deathAnimatorTrigger: Death
+  deathAnimationDuration: 0.5
+  attackSE: {fileID: 8300000, guid: 3845dffe395326145b739d24096c58af, type: 3}
+  slashEffectPrefab: {fileID: 0}
+  maxHealth: 30
+  moveDuration: 0.8
+  regenHealthOnTurnEnd: 0
+  punishOverkill: 0
+  overkillPunishDamage: 3
+  useKeyGolemMechanic: 0
+  sortRole: 4
+  assignedNumber: 0
+  isInvincible: 0
+  attackPhaseActions:
+  - action: {fileID: 11400000, guid: 5a9a0eb9102f43f4a9b9550320bcd2f4, type: 2}
+    weight: 1
+    condition: {fileID: 0}
+  defensePhaseActions: []
+  showTelegraph: 1
+--- !u!114 &5796963283788302514
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db56bb807f41ab841a2ef016b88ab6d9, type: 3}
+  m_Name: Golem_AOEAttack
+  m_EditorClassIdentifier: 
+  actionName: "\u5168\u4F53\u653B\u6483"
+  telegraphMessage: "\u30B4\u30FC\u30EC\u30E0\u304C\u5168\u4F53\u653B\u6483\u3092\u6E96\u5099\uFF01"
+  enemyAnimationTrigger: 
+  damage: 2
+  targetAreas: 000000000100000002000000
+  slashAnimationTrigger: Slash
+  preAttackDelay: 0.5
+  delayBetweenAttacks: 0.15
+  animationDuration: 0.5

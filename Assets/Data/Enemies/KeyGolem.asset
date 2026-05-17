@@ -1,0 +1,153 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-8832640053559874896
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb2639ec482d8b8499df9d0649154173, type: 3}
+  m_Name: Golem_Retreat
+  m_EditorClassIdentifier: 
+  actionName: "\u5F8C\u9000"
+  telegraphMessage: 
+  enemyAnimationTrigger: 
+  moveType: 3
+  targetPosition: 0
+  moveDuration: 1
+  preMoveDelay: 0.5
+--- !u!114 &-5561917504963517132
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5217ca7e468379548aeb12d7cac07e96, type: 3}
+  m_Name: Golem_SniperAttack
+  m_EditorClassIdentifier: 
+  actionName: "\u7CBE\u5BC6\u5C04\u6483"
+  telegraphMessage: "\u30B4\u30FC\u30EC\u30E0\u306E\u653B\u6483"
+  enemyAnimationTrigger: 
+  damage: 3
+  targetArea: -1
+  useShockwave: 0
+  slashAnimationTrigger: GolemSmash
+  preAttackDelay: 0.3
+  animationDuration: 0.0825
+--- !u!114 &-5238522790364991003
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db56bb807f41ab841a2ef016b88ab6d9, type: 3}
+  m_Name: Golem_AOEAttack
+  m_EditorClassIdentifier: 
+  actionName: "\u5168\u4F53\u653B\u6483"
+  telegraphMessage: "\u30B4\u30FC\u30EC\u30E0\u304C\u5168\u4F53\u653B\u6483\u3092\u6E96\u5099\uFF01"
+  enemyAnimationTrigger: 
+  damage: 2
+  targetAreas: 000000000100000002000000
+  slashAnimationTrigger: Slash
+  preAttackDelay: 0.5
+  delayBetweenAttacks: 0.15
+  animationDuration: 0.5
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 389afc11f36691e4b987752695ba08ee, type: 3}
+  m_Name: KeyGolem
+  m_EditorClassIdentifier: 
+  enemyName: "\u30B3\u30FC\u30C9\u30FB\u30B4\u30FC\u30EC\u30E0"
+  enemySprite: {fileID: 1021369689971768109, guid: f2381ec6398bb5b42b9709e64c731b62,
+    type: 3}
+  element: 0
+  elementPhases: 
+  guardReflectDamage: 1
+  elementAnimatorTriggers: []
+  flipSpriteInDialogue: 1
+  scale: {x: 10, y: 10, z: 1}
+  positionOffsetY: 0
+  animatorController: {fileID: 9100000, guid: 778af5dd4f37aa2489aa0f77a38fcae0, type: 2}
+  attackAnimTrigger: Action
+  moveAnimTrigger: Move
+  moveEndAnimTrigger: MoveEnd
+  deathAnimTrigger: Death
+  deathAnimationType: 1
+  deathAnimatorTrigger: Death
+  deathAnimationDuration: 0.5
+  attackSE: {fileID: 8300000, guid: 29774bffbc7a23348867d6e54c866d61, type: 3}
+  slashEffectPrefab: {fileID: 3288845867411983803, guid: a17d2fa550b5be34ba33aaca22471c93,
+    type: 3}
+  maxHealth: 20
+  moveDuration: 0.8
+  regenHealthOnTurnEnd: 0
+  punishOverkill: 0
+  overkillPunishDamage: 3
+  useKeyGolemMechanic: 0
+  sortRole: 0
+  assignedNumber: 0
+  isInvincible: 0
+  attackPhaseActions:
+  - action: {fileID: -5561917504963517132}
+    weight: 0.7
+    condition: {fileID: 0}
+  defensePhaseActions:
+  - action: {fileID: -5812314654419940314, guid: 556d981043a2f2f4a8cae57220acd2c1,
+      type: 2}
+    weight: 0.8
+    condition: {fileID: 0}
+  - action: {fileID: 6015906518659367257, guid: 949d4b69481978741814bb926ed40a5f,
+      type: 2}
+    weight: 0.2
+    condition: {fileID: 0}
+  showTelegraph: 1
+--- !u!114 &5307728999939881284
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b5bc94a237cec494d87222d4232b7ec3, type: 3}
+  m_Name: KeyGolem_Sequence_1
+  m_EditorClassIdentifier: 
+  actionName: KeyGolem_Sequence_1
+  telegraphMessage: 
+  enemyAnimationTrigger: 
+  actions: []
+  delayBetweenActions: 0.2
+  initialDelay: 0
+--- !u!114 &7641885483220548708
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6482b280df9df724eb48d97118653f55, type: 3}
+  m_Name: Golem_Wait
+  m_EditorClassIdentifier: 
+  actionName: "\u5F85\u6A5F"
+  telegraphMessage: 
+  enemyAnimationTrigger: 
+  waitDuration: 0.5

@@ -1,0 +1,80 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 79236dd5d98f935459293e569c35136d, type: 3}
+  m_Name: S_Config_4
+  m_EditorClassIdentifier: 
+  stageName: "\u5909\u6570"
+  stageDescription: "\u9B54\u8853\u5E2B\u3092\u5012\u3057\u305F\u5148\u306B\u306F\u3001\u65E7\u6587\u660E\u306E\u30B3\u30FC\u30C9\u3092\u7BA1\u7406\u3057\u3066\u3044\u305F\u4E2D\u67A2\u3078\u306E\u30B2\u30FC\u30C8\u304C\u898B\u3048\u305F\u3002\u3057\u304B\u3057\u305D\u306E\u524D\u306B\u306F\u3001\u9811\u5F37\u306A\u30B4\u30FC\u30EC\u30E0\u30BF\u30A4\u30D7\u306E\u30B3\u30FC\u30C9\u30A8\u30CD\u30DF\u30FC\u304C\u7ACB\u3061\u306F\u3060\u304B\u308B!"
+  playerAreaPositions:
+  - {x: -7.6, y: 0.5}
+  - {x: -2.3, y: 0.5}
+  - {x: 4, y: 0.5}
+  enemyAreaPositions:
+  - {x: -4.5, y: 0.5}
+  - {x: 1.4, y: 0.5}
+  - {x: 7.4, y: 0.5}
+  playerStartArea: 0
+  enemySpawns:
+  - enemyData: {fileID: 11400000, guid: fb8a6639918e1be42bd1d67b0766ac42, type: 2}
+    enemyPrefab: {fileID: 3327674259706843018, guid: 998c7722fb8c0cd4ca1afa1e6e0fb770,
+      type: 3}
+    startArea: 2
+    overrideMaxHealth: 10
+    sortRole: 0
+    overrideAssignedNumber: 0
+    dialogueSprite: {fileID: 1021369689971768109, guid: f2381ec6398bb5b42b9709e64c731b62,
+      type: 3}
+    flipDialogueSprite: 1
+  enemyStartArea: 2
+  enemyStartAreas: 
+  bgmClip: {fileID: 8300000, guid: 4042427180acc9249bd4b32f16924d01, type: 3}
+  introDialogue:
+  - speaker: 0
+    text: "\u3053\u306E\u5148\u304C\u30B3\u30A2\u3078\u306E\u5165\u53E3..\u3060\u3051\u3069\u305D\u306E\u524D\u306B\u30B3\u30FC\u30C9\u30A8\u30CD\u30DF\u30FC\u304C\u3044\u308B\u307F\u305F\u3044\u3002"
+    bounce: 0
+    changeVisibility: 1
+    showPlayer: 1
+    showAssistant: 1
+    showEnemy: 1
+    enemyIndex: 0
+  - speaker: 1
+    text: "\u3042\u308C\u306F\u3001\u30D7\u30ED\u30B0\u30E9\u30DF\u30F3\u30B0\u3067\u9580\u3092\u5B88\u308B\u3088\u3046\u30B7\u30B9\u30C6\u30E0\u304C\u7D44\u307E\u308C\u305F\u3001\u30B4\u30FC\u30EC\u30E0\u306E\u3088\u3046\u3067\u3059\u3002\u3053\u306E\u30B4\u30FC\u30EC\u30E0\u3082\u3001\u30B7\u30B9\u30C6\u30E0\u306E\u66B4\u8D70\u6642\u306B\u751F\u6210\u3055\u308C\u305F\u3001\u30B3\u30FC\u30C9\u30A8\u30CD\u30DF\u30FC\u306E\u3046\u3061\u306E1\u4F53\u3067\u3057\u3087\u3046\u3002"
+    bounce: 0
+    changeVisibility: 0
+    showPlayer: 0
+    showAssistant: 0
+    showEnemy: 0
+    enemyIndex: 0
+  enemyDialogueSprite: {fileID: 0}
+  restrictedKeywords: []
+  allowedKeywords:
+  - Attack
+  - Cast
+  - for
+  - if
+  - MoveForward
+  - MoveBackward
+  - while
+  obtainedKeywords:
+  - "\u5909\u6570"
+  defeatAdvice: "\u6575\u3078\u653B\u6483\u3059\u308B\u56DE\u6570\u3092\u5408\u308F\u305B\u306A\u3044\u3068\u30C0\u30E1\u30FC\u30B8\u304C\u5165\u3089\u306A\u3044\u306E\u3067\u3001for
+    i in range(count):  \u7B49\u3092\u4F7F\u3063\u3066\u5FC5\u8981\u306A\u56DE\u6570\u653B\u6483\u3067\u304D\u308B\u3088\u3046\u306B\u3057\u307E\u3057\u3087\u3046\u3002"
+  tutorialHints:
+  - playerTurn: 2
+    phase: 1
+    message: "\u3069\u3046\u3084\u3089\u3001\u7279\u5B9A\u306E\u56DE\u6570\u3074\u3063\u305F\u308A\u653B\u6483\u3057\u306A\u3044\u3068\u5012\u305B\u306A\u3044\u6575\u306E\u3088\u3046\u3067\u3059\u3002"
+  - playerTurn: 3
+    phase: 0
+    message: "\u6575\u3078\u4F55\u56DE\u653B\u6483\u3059\u308C\u3070\u3044\u3044\u304B\u3092\u3001count\u3068\u3044\u3046\u5909\u6570\u3067\u53D6\u5F97\u3067\u304D\u307E\u3057\u305F\u3002\n\u7E70\u308A\u8FD4\u3057\u51E6\u7406\u3068\u4E0E\u3048\u3089\u308C\u305Fcount\u5909\u6570\u3067\u3001\u6575\u3092\u653B\u6483\u3057\u307E\u3057\u3087\u3046\u3002"
+  lockedCode: 
+  useSortBossMechanic: 0
+  enemyManager: {fileID: 0}

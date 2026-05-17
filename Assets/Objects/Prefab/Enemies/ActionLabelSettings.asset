@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 163bb044bc3f13746b26a505e33dae50, type: 3}
+  m_Name: ActionLabelSettings
+  m_EditorClassIdentifier: 
+  offsetY: 0.54
+  fontSize: 0.5
+  color: {r: 1, g: 1, b: 1, a: 1}
+  font: {fileID: 11400000, guid: 79c24fe7765a48b40a010503495116ad, type: 2}

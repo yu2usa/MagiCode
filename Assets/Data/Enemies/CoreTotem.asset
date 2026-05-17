@@ -1,0 +1,45 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 389afc11f36691e4b987752695ba08ee, type: 3}
+  m_Name: CoreTotem
+  m_EditorClassIdentifier: 
+  enemyName: "\u30B3\u30A2\u30FB\u30C8\u30FC\u30C6\u30E0"
+  enemySprite: {fileID: -1063868807524249421, guid: b0f16be85ecca6142b26140ee6143210,
+    type: 3}
+  element: 0
+  elementPhases: 
+  guardReflectDamage: 1
+  elementAnimatorTriggers: []
+  flipSpriteInDialogue: 0
+  scale: {x: 5, y: 5, z: 1}
+  positionOffsetY: 0
+  animatorController: {fileID: 0}
+  attackAnimTrigger: Action
+  moveAnimTrigger: Move
+  moveEndAnimTrigger: MoveEnd
+  deathAnimTrigger: Death
+  deathAnimationType: 1
+  deathAnimatorTrigger: Death
+  deathAnimationDuration: 0.5
+  slashEffectPrefab: {fileID: 0}
+  maxHealth: 1
+  moveDuration: 0.8
+  regenHealthOnTurnEnd: 0
+  punishOverkill: 0
+  overkillPunishDamage: 3
+  useKeyGolemMechanic: 0
+  sortRole: 3
+  assignedNumber: 0
+  isInvincible: 1
+  attackPhaseActions: []
+  defensePhaseActions: []
+  showTelegraph: 1

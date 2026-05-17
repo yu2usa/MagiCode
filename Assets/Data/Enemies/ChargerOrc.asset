@@ -1,0 +1,84 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-5263851912377017015
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5217ca7e468379548aeb12d7cac07e96, type: 3}
+  m_Name: Orc_NormalAttack
+  m_EditorClassIdentifier: 
+  actionName: "\u901A\u5E38\u653B\u6483"
+  telegraphMessage: "\u30AA\u30FC\u30AF\u304C\u6B66\u5668\u3092\u632F\u308A\u304B\u3076\u3063\u305F\uFF01"
+  damage: 3
+  targetArea: -1
+  animationTrigger: Slash
+  preAttackDelay: 0
+  animationDuration: 0.83
+--- !u!114 &-2461087637923141756
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef3ddf92940b8b3488151c54f081bd28, type: 3}
+  m_Name: Orc_Charge
+  m_EditorClassIdentifier: 
+  actionName: "\u30C1\u30E3\u30FC\u30B8"
+  telegraphMessage: "\u30AA\u30FC\u30AF\u304C\u529B\u3092\u6E9C\u3081\u3066\u3044\u308B...\u6B21\u306E\u653B\u6483\u306F\u5F37\u529B\u3060\uFF01"
+  chargeDuration: 1
+  damageMultiplier: 2
+  chargeColor: {r: 1, g: 0.3, b: 0.3, a: 1}
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 389afc11f36691e4b987752695ba08ee, type: 3}
+  m_Name: ChargerOrc
+  m_EditorClassIdentifier: 
+  enemyName: "\u7A81\u6483\u30AA\u30FC\u30AF"
+  enemySprite: {fileID: 0}
+  maxHealth: 12
+  attackDamage: 3
+  attackPhaseActions:
+  - action: {fileID: -5263851912377017015}
+    weight: 0.7
+    condition: {fileID: 0}
+  - action: {fileID: -2461087637923141756}
+    weight: 0.3
+    condition: {fileID: 0}
+  defensePhaseActions:
+  - action: {fileID: 6015906518659367257}
+    weight: 1
+    condition: {fileID: 0}
+  showTelegraph: 1
+--- !u!114 &6015906518659367257
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb2639ec482d8b8499df9d0649154173, type: 3}
+  m_Name: Orc_Approach
+  m_EditorClassIdentifier: 
+  actionName: "\u63A5\u8FD1"
+  telegraphMessage: 
+  moveType: 4
+  targetPosition: 0
+  moveDuration: 0.6
+  preMoveDelay: 0.5

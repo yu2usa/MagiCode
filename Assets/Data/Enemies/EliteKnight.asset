@@ -1,0 +1,251 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-5007576781268829879
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6482b280df9df724eb48d97118653f55, type: 3}
+  m_Name: Assassin_Wait
+  m_EditorClassIdentifier: 
+  actionName: "\u69D8\u5B50\u898B"
+  telegraphMessage: 
+  enemyAnimationTrigger: 
+  waitDuration: 0.8
+--- !u!114 &-4707305522197656953
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5217ca7e468379548aeb12d7cac07e96, type: 3}
+  m_Name: "\u30CA\u30A4\u30C8_Attack_1"
+  m_EditorClassIdentifier: 
+  actionName: "\u30CA\u30A4\u30C8_Attack_1"
+  telegraphMessage: 
+  enemyAnimationTrigger: 
+  damage: 3
+  targetArea: -1
+  useShockwave: 0
+  slashAnimationTrigger: Slash
+  preAttackDelay: 0
+  animationDuration: 0.83
+--- !u!114 &-3270839386578394722
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b5bc94a237cec494d87222d4232b7ec3, type: 3}
+  m_Name: "\u30CA\u30A4\u30C8_Sequence_1"
+  m_EditorClassIdentifier: 
+  actionName: "\u30CA\u30A4\u30C8_Sequence_1"
+  telegraphMessage: 
+  enemyAnimationTrigger: 
+  actions: []
+  delayBetweenActions: 0.2
+  initialDelay: 0
+--- !u!114 &-880046407137049862
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5217ca7e468379548aeb12d7cac07e96, type: 3}
+  m_Name: Assassin_QuickAttack
+  m_EditorClassIdentifier: 
+  actionName: "\u7D20\u65E9\u3044\u65AC\u6483"
+  telegraphMessage: 
+  enemyAnimationTrigger: 
+  damage: 4
+  targetArea: -1
+  useShockwave: 0
+  slashAnimationTrigger: Slash
+  preAttackDelay: 0.5
+  animationDuration: 0.9
+--- !u!114 &-688452544882066808
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db56bb807f41ab841a2ef016b88ab6d9, type: 3}
+  m_Name: "\u30CA\u30A4\u30C8_MultiAttack_1"
+  m_EditorClassIdentifier: 
+  actionName: "\u30CA\u30A4\u30C8_MultiAttack_1"
+  telegraphMessage: 
+  enemyAnimationTrigger: 
+  damage: 3
+  targetAreas: 
+  slashAnimationTrigger: Slash
+  preAttackDelay: 0.5
+  delayBetweenAttacks: 0.2
+  animationDuration: 0.5
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 389afc11f36691e4b987752695ba08ee, type: 3}
+  m_Name: EliteKnight
+  m_EditorClassIdentifier: 
+  enemyName: "\u30B3\u30FC\u30C9\u306E\u9A0E\u58EB"
+  enemySprite: {fileID: 2279039340306815425, guid: 527c73d404289af448e2fad4b318268c,
+    type: 3}
+  element: 0
+  elementPhases: 
+  guardReflectDamage: 1
+  elementAnimatorTriggers: []
+  flipSpriteInDialogue: 0
+  scale: {x: 5, y: 5, z: 1}
+  positionOffsetY: 0
+  animatorController: {fileID: 9100000, guid: 957859b7f8ffa3d4f9e75b7761ea1719, type: 2}
+  attackAnimTrigger: Action
+  moveAnimTrigger: Move
+  moveEndAnimTrigger: MoveEnd
+  deathAnimTrigger: Death
+  deathAnimationType: 0
+  deathAnimatorTrigger: Death
+  deathAnimationDuration: 0.5
+  attackSE: {fileID: 8300000, guid: 91628dd2f34190045a76f08382a13d98, type: 3}
+  slashEffectPrefab: {fileID: 0}
+  maxHealth: 12
+  moveDuration: 0.8
+  regenHealthOnTurnEnd: 1
+  punishOverkill: 0
+  overkillPunishDamage: 3
+  useKeyGolemMechanic: 0
+  sortRole: 0
+  assignedNumber: 0
+  isInvincible: 0
+  attackPhaseActions:
+  - action: {fileID: -880046407137049862}
+    weight: 1
+    condition: {fileID: 0}
+  defensePhaseActions:
+  - action: {fileID: 6015906518659367257, guid: 949d4b69481978741814bb926ed40a5f,
+      type: 2}
+    weight: 1
+    condition: {fileID: 0}
+  showTelegraph: 1
+--- !u!114 &2193479862468669434
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb2639ec482d8b8499df9d0649154173, type: 3}
+  m_Name: Assassin_Approach
+  m_EditorClassIdentifier: 
+  actionName: "\u63A5\u8FD1"
+  telegraphMessage: 
+  enemyAnimationTrigger: 
+  moveType: 4
+  targetPosition: 0
+  moveDuration: 0.4
+  preMoveDelay: 0.2
+--- !u!114 &5308177132720751507
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5217ca7e468379548aeb12d7cac07e96, type: 3}
+  m_Name: "\u30CA\u30A4\u30C8_Attack_1"
+  m_EditorClassIdentifier: 
+  actionName: "\u30CA\u30A4\u30C8_Attack_1"
+  telegraphMessage: 
+  enemyAnimationTrigger: 
+  damage: 3
+  targetArea: -1
+  useShockwave: 0
+  slashAnimationTrigger: Slash
+  preAttackDelay: 0
+  animationDuration: 0.83
+--- !u!114 &7935887032019436109
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db56bb807f41ab841a2ef016b88ab6d9, type: 3}
+  m_Name: "\u30CA\u30A4\u30C8_MultiAttack_1"
+  m_EditorClassIdentifier: 
+  actionName: "\u30CA\u30A4\u30C8_MultiAttack_1"
+  telegraphMessage: 
+  enemyAnimationTrigger: 
+  damage: 3
+  targetAreas: 
+  slashAnimationTrigger: Slash
+  preAttackDelay: 0.5
+  delayBetweenAttacks: 0.2
+  animationDuration: 0.5
+--- !u!114 &8597436325341337360
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b5bc94a237cec494d87222d4232b7ec3, type: 3}
+  m_Name: Assassin_HitAndRun
+  m_EditorClassIdentifier: 
+  actionName: "\u30D2\u30C3\u30C8&\u30E9\u30F3"
+  telegraphMessage: "\u30A2\u30B5\u30B7\u30F3\u304C\u7D20\u65E9\u304F\u52D5\u304D\u51FA\u3057\u305F\uFF01"
+  enemyAnimationTrigger: 
+  actions:
+  - {fileID: 2193479862468669434}
+  - {fileID: -880046407137049862}
+  - {fileID: 8685542113993554375}
+  delayBetweenActions: 0.1
+  initialDelay: 0
+--- !u!114 &8685542113993554375
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb2639ec482d8b8499df9d0649154173, type: 3}
+  m_Name: Assassin_Retreat
+  m_EditorClassIdentifier: 
+  actionName: "\u96E2\u8131"
+  telegraphMessage: 
+  enemyAnimationTrigger: 
+  moveType: 5
+  targetPosition: 0
+  moveDuration: 0.4
+  preMoveDelay: 0.1

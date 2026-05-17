@@ -1,0 +1,166 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &3327674259706843018
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8024228170963025907}
+  - component: {fileID: 192639569879359147}
+  - component: {fileID: 4428461071104048347}
+  - component: {fileID: 8477423584819933516}
+  m_Layer: 0
+  m_Name: Knight
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8024228170963025907
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3327674259706843018}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: 1, z: -0, w: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 4.0290403, y: 4, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
+--- !u!212 &192639569879359147
+SpriteRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3327674259706843018}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_Sprite: {fileID: 2279039340306815425, guid: 527c73d404289af448e2fad4b318268c,
+    type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_FlipX: 0
+  m_FlipY: 0
+  m_DrawMode: 0
+  m_Size: {x: 0.49, y: 0.54}
+  m_AdaptiveModeThreshold: 0.5
+  m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 1
+  m_MaskInteraction: 0
+  m_SpriteSortPoint: 0
+--- !u!95 &4428461071104048347
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3327674259706843018}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 9767c58d35b9fc149967c1eba058da3b, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &8477423584819933516
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3327674259706843018}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e8fdc6f5074d4b45959a29d27c19395, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemyData: {fileID: 11400000, guid: 060b750b96a767f4c954dd37fa22cfed, type: 2}
+  enemyIndex: 0
+  enemyType: 
+  enemyList:
+  - Sample
+  - Scout
+  - Mage
+  - EliteKnight
+  - KeyGolem
+  - Core
+  stageConfig: {fileID: 11400000, guid: 7f9d13eba054a384d9ac2ba63e839246, type: 2}
+  areaPos:
+  - {x: -4.5, y: 0.5}
+  - {x: 1.4, y: 0.5}
+  - {x: 7.4, y: 0.5}
+  enemyCurrentPos: 0
+  enemyHealth: 0
+  element: 0
+  healthBarPrefab: {fileID: 4626284455509830623, guid: 46e1ba48a47e79a4ca8ec56e04420cda,
+    type: 3}
+  canvas: {fileID: 0}
+  healthBarOffsetY: -10
+  damageIndicatorPrefab: {fileID: 8782528604501982964, guid: 794b1a69bf27f04448b8ba256386b3ef,
+    type: 3}
+  guardIndicatorPrefab: {fileID: 0}
+  healIndicatorPrefab: {fileID: 0}
+  healIndicatorColor: {r: 0.3, g: 1, b: 0.4, a: 1}
+  useFixedPosition: 1
+  fixedPositionOffsetY: -50
+  healthBarSpacing: 60
+  healthBarWidth: 0
+  healthBarHeight: 0
+  healthBarFontSize: 20
+  enemyNameFontSize: 20
+  actionLabelSettings: {fileID: 11400000, guid: 8aa395d810d1b15489c4118db5c88d97,
+    type: 2}
+  turnController: {fileID: 0}
+  player: {fileID: 8560901427488743033, guid: c0ddc4c342c865a408db1b57f4dc08fd, type: 3}
+  enemySlash: {fileID: 0}
+  enemyShockwave: {fileID: 0}
+  incomingDamageMultiplier: 1
+  blockIncomingDamage: 0
+  forceDamage: 0
+  assignedNumber: 0

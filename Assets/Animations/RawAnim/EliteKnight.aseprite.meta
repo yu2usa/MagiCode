@@ -1,0 +1,776 @@
+fileFormatVersion: 2
+guid: 527c73d404289af448e2fad4b318268c
+ScriptedImporter:
+  internalIDToNameTable: []
+  externalObjects:
+  - first:
+      type: UnityEngine:AnimationClip
+      assembly: UnityEngine.AnimationModule
+      name: Death
+    second: {fileID: 7400000, guid: fc128cfcfecf756438991f3b3f91a820, type: 2}
+  - first:
+      type: UnityEngine:AnimationClip
+      assembly: UnityEngine.AnimationModule
+      name: Idle
+    second: {fileID: 7400000, guid: 0f3f0a5768d7c6844b4665733aa6cb6c, type: 2}
+  - first:
+      type: UnityEngine:AnimationClip
+      assembly: UnityEngine.AnimationModule
+      name: Move
+    second: {fileID: 7400000, guid: 787bccd509138354aa4f0a047778cb62, type: 2}
+  - first:
+      type: UnityEngine:AnimationClip
+      assembly: UnityEngine.AnimationModule
+      name: Slash
+    second: {fileID: 7400000, guid: c256d58ef33f21948b56f4d575e626d8, type: 2}
+  serializedVersion: 2
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+  script: {fileID: 11500000, guid: 62a9f0aa5b59740cfbadc7e5f9823bb0, type: 3}
+  textureImporterSettings:
+    alphaSource: 1
+    mipMapMode: 0
+    enableMipMap: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+    convertToNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+    swizzle: 50462976
+    isReadable: 0
+    streamingMipmaps: 0
+    streamingMipmapsPriority: 0
+    vTOnly: 0
+    ignoreMipmapLimit: 0
+    nPOTScale: 1
+    sRGBTexture: 1
+    spriteMode: 2
+    spriteExtrude: 1
+    spriteMeshType: 1
+    alignment: 0
+    spritePivot: {x: 0.5, y: 0.5}
+    spritePixelsToUnits: 100
+    spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+    spriteGenerateFallbackPhysicsShape: 0
+    generateCubemap: 6
+    cubemapConvolution: 0
+    seamlessCubemap: 0
+    alphaIsTransparency: 1
+    spriteTessellationDetail: -1
+    textureType: 8
+    textureShape: 1
+    singleChannelComponent: 0
+    flipbookRows: 0
+    flipbookColumns: 0
+    ignorePngGamma: 0
+    cookieMode: 0
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+    normalMap: 0
+    textureFormat: 0
+    maxTextureSize: 0
+    lightmap: 0
+    compressionQuality: 0
+    linearTexture: 0
+    grayScaleToAlpha: 0
+    rGBM: 0
+    cubemapConvolutionSteps: 0
+    cubemapConvolutionExponent: 0
+    maxTextureSizeSet: 0
+    compressionQualitySet: 0
+    textureFormatSet: 0
+    applyGammaDecoding: 0
+  previousAsepriteImporterSettings:
+    fileImportMode: 1
+    importHiddenLayers: 0
+    layerImportMode: 1
+    defaultPivotSpace: 0
+    defaultPivotAlignment: 7
+    customPivotPosition: {x: 0.5, y: 0.5}
+    spritePadding: 0
+    generateModelPrefab: 1
+    generateAnimationClips: 1
+    addSortingGroup: 1
+    addShadowCasters: 0
+  asepriteImporterSettings:
+    fileImportMode: 1
+    importHiddenLayers: 0
+    layerImportMode: 1
+    defaultPivotSpace: 0
+    defaultPivotAlignment: 7
+    customPivotPosition: {x: 0.5, y: 0.5}
+    spritePadding: 0
+    generateModelPrefab: 1
+    generateAnimationClips: 1
+    addSortingGroup: 1
+    addShadowCasters: 0
+  importFileNodeState: 1
+  platformSettingsDirtyTick: 639070548462688732
+  textureAssetName: 
+  singleSpriteImportData:
+  - name: 
+    originalName: 
+    pivot: {x: 0, y: 0}
+    alignment: 0
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 0
+      y: 0
+      width: 0
+      height: 0
+    spriteID: 
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 0, y: 0}
+  animatedSpriteImportData:
+  - name: EliteKnight_Frame_0
+    originalName: 
+    pivot: {x: 0.49, y: 0.01}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 191
+      y: 81
+      width: 49
+      height: 54
+    spriteID: 545306619daa42d4b94542518dcbe962
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 191, y: 81}
+  - name: EliteKnight_Frame_1
+    originalName: 
+    pivot: {x: 0.5, y: 0.04}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 248
+      y: 81
+      width: 49
+      height: 54
+    spriteID: b2be397f209ed024287cc7440f6dde39
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 248, y: 81}
+  - name: EliteKnight_Frame_2
+    originalName: 
+    pivot: {x: 0.5, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 305
+      y: 81
+      width: 49
+      height: 54
+    spriteID: 3b56fceca68d9d944b430926dae11b0e
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 305, y: 81}
+  - name: EliteKnight_Frame_3
+    originalName: 
+    pivot: {x: 0.5, y: 0}
+    alignment: 7
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 362
+      y: 81
+      width: 49
+      height: 54
+    spriteID: b5205c6fa5b7ec945bd00cb4803d4e69
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 362, y: 81}
+  - name: EliteKnight_Frame_4
+    originalName: 
+    pivot: {x: 0.53, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 4
+      y: 81
+      width: 53
+      height: 54
+    spriteID: 7ffeb447973c2934b9b6c9b4b34f6b0c
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 4, y: 81}
+  - name: EliteKnight_Frame_5
+    originalName: 
+    pivot: {x: 0.5, y: 0}
+    alignment: 7
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 419
+      y: 81
+      width: 49
+      height: 54
+    spriteID: 6aaab3ec50c15e148bcafef427fdebb5
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 419, y: 81}
+  - name: EliteKnight_Frame_6
+    originalName: 
+    pivot: {x: 0.63, y: 0.12}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 157
+      y: 4
+      width: 56
+      height: 56
+    spriteID: a65dd16000960eb46b3aefc0a48141ca
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 157, y: 4}
+  - name: EliteKnight_Frame_7
+    originalName: 
+    pivot: {x: 0.37, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 221
+      y: 4
+      width: 61
+      height: 51
+    spriteID: 1e8c74f60c56c3145ba58f76301f7109
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 221, y: 4}
+  - name: EliteKnight_Frame_8
+    originalName: 
+    pivot: {x: 0.37, y: 0.03}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 61
+      y: 143
+      width: 45
+      height: 54
+    spriteID: 6b28c52e69a2e3342964cfefaf2d7e15
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 61, y: 143}
+  - name: EliteKnight_Frame_9
+    originalName: 
+    pivot: {x: 0.53, y: -0.01}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 114
+      y: 143
+      width: 35
+      height: 67
+    spriteID: bbc714c4a7bdffc4e87e261223516671
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 114, y: 143}
+  - name: EliteKnight_Frame_10
+    originalName: 
+    pivot: {x: 0.65, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 95
+      y: 4
+      width: 54
+      height: 60
+    spriteID: 0bbdad9277859f44084c43fb7e086901
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 95, y: 4}
+  - name: EliteKnight_Frame_11
+    originalName: 
+    pivot: {x: 0.38, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 4
+      y: 4
+      width: 83
+      height: 69
+    spriteID: 0bfa40596a28fc244942a77f5524fba2
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 4, y: 4}
+  - name: EliteKnight_Frame_12
+    originalName: 
+    pivot: {x: 0.18, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 290
+      y: 4
+      width: 63
+      height: 47
+    spriteID: 0570027f25103bc4fa9499a114a0a0cd
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 290, y: 4}
+  - name: EliteKnight_Frame_13
+    originalName: 
+    pivot: {x: 0.18, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 361
+      y: 4
+      width: 63
+      height: 47
+    spriteID: 6d5d2e3376af05a498b60ed003f6a235
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 361, y: 4}
+  - name: EliteKnight_Frame_14
+    originalName: 
+    pivot: {x: 0.18, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 432
+      y: 4
+      width: 63
+      height: 47
+    spriteID: d6eec67934553a94c99df6cf80d430ff
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 432, y: 4}
+  - name: EliteKnight_Frame_17
+    originalName: 
+    pivot: {x: 0.56, y: 0.04}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 4
+      y: 143
+      width: 49
+      height: 54
+    spriteID: 289a8397a15b4334a8a30ceb509bf856
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 4, y: 143}
+  - name: EliteKnight_Frame_18
+    originalName: 
+    pivot: {x: 0.32, y: 0.02}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 65
+      y: 81
+      width: 55
+      height: 50
+    spriteID: 335569068c0fed04ba9a52e1b1a62b25
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 65, y: 81}
+  - name: EliteKnight_Frame_19
+    originalName: 
+    pivot: {x: 0.33, y: 0.02}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 128
+      y: 81
+      width: 55
+      height: 50
+    spriteID: 0a9e751463a2ea945b14537ed2826e00
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 128, y: 81}
+  - name: EliteKnight_Frame_15
+    originalName: 
+    pivot: {x: 0.5, y: 0}
+    alignment: 7
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 4
+      y: 205
+      width: 46
+      height: 31
+    spriteID: 6e3b676c8176d3f43bdf3f82bfcd35a8
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 4, y: 205}
+  - name: EliteKnight_Frame_16
+    originalName: 
+    pivot: {x: 0.5, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 157
+      y: 143
+      width: 46
+      height: 31
+    spriteID: 68ab011928fffce41b74e95f9bb9afae
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 157, y: 143}
+  spriteSheetImportData: []
+  asepriteLayers:
+  - layerIndex: 0
+    guid: 1093432532
+    name: EliteKnight
+    layerFlags: 0
+    layerType: 0
+    blendMode: 0
+    cells:
+    - name: EliteKnight_Frame_0
+      frameIndex: 0
+      cellRect:
+        x: 44
+        y: 24
+        width: 49
+        height: 54
+      spriteId: 545306619daa42d4b94542518dcbe962
+    - name: EliteKnight_Frame_1
+      frameIndex: 1
+      cellRect:
+        x: 44
+        y: 22
+        width: 49
+        height: 54
+      spriteId: b2be397f209ed024287cc7440f6dde39
+    - name: EliteKnight_Frame_2
+      frameIndex: 2
+      cellRect:
+        x: 44
+        y: 24
+        width: 49
+        height: 54
+      spriteId: 3b56fceca68d9d944b430926dae11b0e
+    - name: EliteKnight_Frame_3
+      frameIndex: 3
+      cellRect:
+        x: 44
+        y: 24
+        width: 49
+        height: 54
+      spriteId: b5205c6fa5b7ec945bd00cb4803d4e69
+    - name: EliteKnight_Frame_4
+      frameIndex: 4
+      cellRect:
+        x: 40
+        y: 24
+        width: 53
+        height: 54
+      spriteId: 7ffeb447973c2934b9b6c9b4b34f6b0c
+    - name: EliteKnight_Frame_5
+      frameIndex: 5
+      cellRect:
+        x: 44
+        y: 24
+        width: 49
+        height: 54
+      spriteId: 6aaab3ec50c15e148bcafef427fdebb5
+    - name: EliteKnight_Frame_6
+      frameIndex: 6
+      cellRect:
+        x: 37
+        y: 20
+        width: 56
+        height: 56
+      spriteId: a65dd16000960eb46b3aefc0a48141ca
+    - name: EliteKnight_Frame_7
+      frameIndex: 7
+      cellRect:
+        x: 45
+        y: 25
+        width: 61
+        height: 51
+      spriteId: 1e8c74f60c56c3145ba58f76301f7109
+    - name: EliteKnight_Frame_8
+      frameIndex: 8
+      cellRect:
+        x: 55
+        y: 25
+        width: 45
+        height: 54
+      spriteId: 6b28c52e69a2e3342964cfefaf2d7e15
+    - name: EliteKnight_Frame_9
+      frameIndex: 9
+      cellRect:
+        x: 52
+        y: 25
+        width: 35
+        height: 67
+      spriteId: bbc714c4a7bdffc4e87e261223516671
+    - name: EliteKnight_Frame_10
+      frameIndex: 10
+      cellRect:
+        x: 33
+        y: 25
+        width: 54
+        height: 60
+      spriteId: 0bbdad9277859f44084c43fb7e086901
+    - name: EliteKnight_Frame_11
+      frameIndex: 11
+      cellRect:
+        x: 39
+        y: 21
+        width: 83
+        height: 69
+      spriteId: 0bfa40596a28fc244942a77f5524fba2
+    - name: EliteKnight_Frame_12
+      frameIndex: 12
+      cellRect:
+        x: 59
+        y: 21
+        width: 63
+        height: 47
+      spriteId: 0570027f25103bc4fa9499a114a0a0cd
+    - name: EliteKnight_Frame_13
+      frameIndex: 13
+      cellRect:
+        x: 59
+        y: 21
+        width: 63
+        height: 47
+      spriteId: 6d5d2e3376af05a498b60ed003f6a235
+    - name: EliteKnight_Frame_14
+      frameIndex: 14
+      cellRect:
+        x: 59
+        y: 21
+        width: 63
+        height: 47
+      spriteId: d6eec67934553a94c99df6cf80d430ff
+    - name: EliteKnight_Frame_17
+      frameIndex: 17
+      cellRect:
+        x: 44
+        y: 24
+        width: 49
+        height: 54
+      spriteId: 289a8397a15b4334a8a30ceb509bf856
+    - name: EliteKnight_Frame_18
+      frameIndex: 18
+      cellRect:
+        x: 53
+        y: 26
+        width: 55
+        height: 50
+      spriteId: 335569068c0fed04ba9a52e1b1a62b25
+    - name: EliteKnight_Frame_19
+      frameIndex: 19
+      cellRect:
+        x: 53
+        y: 26
+        width: 55
+        height: 50
+      spriteId: 0a9e751463a2ea945b14537ed2826e00
+    - name: EliteKnight_Frame_15
+      frameIndex: 15
+      cellRect:
+        x: 35
+        y: 24
+        width: 46
+        height: 31
+      spriteId: 6e3b676c8176d3f43bdf3f82bfcd35a8
+    - name: EliteKnight_Frame_16
+      frameIndex: 16
+      cellRect:
+        x: 35
+        y: 24
+        width: 46
+        height: 31
+      spriteId: 68ab011928fffce41b74e95f9bb9afae
+    linkedCells: []
+    parentIndex: -1
+  platformSettings:
+  - name: DefaultTexturePlatform
+    overridden: 0
+    ignorePlatformSupport: 0
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    androidETC2FallbackOverride: 0
+  - name: Standalone
+    overridden: 0
+    ignorePlatformSupport: 0
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    androidETC2FallbackOverride: 0
+  - name: Server
+    overridden: 0
+    ignorePlatformSupport: 0
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    androidETC2FallbackOverride: 0
+  - name: Android
+    overridden: 0
+    ignorePlatformSupport: 0
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    androidETC2FallbackOverride: 0
+  - name: iPhone
+    overridden: 0
+    ignorePlatformSupport: 0
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    androidETC2FallbackOverride: 0
+  secondarySpriteTextures: []
+  spritePackingTag: 
+  canvasSize: {x: 134, y: 100}

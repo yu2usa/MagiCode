@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c78e895046e8e442a4a8ec7e2d1512b, type: 3}
+  m_Name: WaterSpell
+  m_EditorClassIdentifier: 
+  actionName: WaterSpell
+  telegraphMessage: 
+  enemyAnimationTrigger: 
+  damage: 4
+  damageType: 6
+  targetArea: -1
+  magicEffectPrefab: {fileID: 4443004470112066901, guid: 7201206532c605a4784fb8248193368d,
+    type: 3}
+  animatorTrigger: Strike
+  preAttackDelay: 0.5
+  effectDuration: 0.7
