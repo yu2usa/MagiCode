@@ -77,6 +77,11 @@ crashlytics-build.properties
 # Claude Code
 .claude/
 CLAUDE.md
+memo.txt.meta
+message.txt.meta
+prompt.txt.meta
+chathistory.txt.meta
+blockengine2.meta
 
 # TextMesh Pro generated SDF font assets (regenerate in Unity after cloning)
 *SDF.asset
