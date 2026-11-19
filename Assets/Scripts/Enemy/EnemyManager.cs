@@ -308,25 +308,38 @@ public class EnemyManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 属性フェーズが有効な全敵の属性をランダム変化させ、全演出が完了するまで待機する。
-    /// PlayerController の攻撃実行前に yield return で呼ぶ。
+    /// 属性フェーズが有効な全敵について、このターンの攻撃ごとの属性を決めて最初の属性へ変化させ、全演出が完了するまで待機する。
+    /// TurnController.PlayerAttack() のコード入力前に yield return で呼ぶ。
     /// </summary>
     public IEnumerator TriggerAllElementChanges()
+    {
+        yield return ChangeElementsInParallel(e => e.RandomizeElement());
+    }
+
+    /// <summary>
+    /// プレイヤーの attackIndex 回目（0始まり）の攻撃が当たる前に、決めておいた属性へ形態変化させる
+    /// </summary>
+    public IEnumerator ChangeElementsBeforeAttack(int attackIndex)
+    {
+        yield return ChangeElementsInParallel(e => e.ChangeToPlannedElement(attackIndex));
+    }
+
+    // 全敵を並列で変化させ、全員の演出完了を待つ
+    private IEnumerator ChangeElementsInParallel(System.Func<EnemyController, IEnumerator> change)
     {
         var targets = AliveEnemies.FindAll(e => e.HasElementPhases);
         if (targets.Count == 0) yield break;
 
-        // 全敵を並列で変化させ、全員の演出完了を待つ
         int remaining = targets.Count;
         foreach (var enemy in targets)
-            StartCoroutine(WaitElementChange(enemy, () => remaining--));
+            StartCoroutine(WaitElementChange(change(enemy), () => remaining--));
 
         yield return new WaitUntil(() => remaining <= 0);
     }
 
-    private IEnumerator WaitElementChange(EnemyController enemy, System.Action onComplete)
+    private IEnumerator WaitElementChange(IEnumerator change, System.Action onComplete)
     {
-        yield return StartCoroutine(enemy.RandomizeElement());
+        yield return StartCoroutine(change);
         onComplete();
     }
 

@@ -8,6 +8,7 @@ public static class ClearDataManager
     private const string SaveKey         = "clearedStages";
     private const string KeywordsKey     = "obtainedKeywordStages";
     private const string TutorialKey     = "menuTutorialSeen";
+    private const string IntroKey        = "titleIntroSeen";
 
     public static List<string> GetClearedStages()
     {
@@ -64,6 +65,24 @@ public static class ClearDataManager
         ES3.Save(TutorialKey, false);
     }
 
+    // --- タイトルイントロ既読フラグ ---
+
+    public static bool IsTitleIntroSeen()
+    {
+        return ES3.Load<bool>(IntroKey, defaultValue: false);
+    }
+
+    public static void MarkTitleIntroSeen()
+    {
+        ES3.Save(IntroKey, true);
+    }
+
+    /// <summary>タイトルイントロ既読フラグをリセットする（次回起動時に再生される）</summary>
+    public static void ResetTitleIntro()
+    {
+        ES3.Save(IntroKey, false);
+    }
+
     // --- 全データ一括クリア ---
 
     /// <summary>
@@ -75,5 +94,6 @@ public static class ClearDataManager
         ES3.DeleteKey(SaveKey);
         ES3.DeleteKey(KeywordsKey);
         ES3.DeleteKey(TutorialKey);
+        ES3.DeleteKey(IntroKey);
     }
 }

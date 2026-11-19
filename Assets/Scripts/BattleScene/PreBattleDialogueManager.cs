@@ -68,6 +68,11 @@ public class PreBattleDialogueManager : MonoBehaviour
     private List<bool> _enemyFlips = new List<bool>();
     // 現在のスプライト設定時に使う反転フラグ
     private bool _currentFlip = false;
+    // アシスタントの元の置き場所と向き（セリフごとに敵の位置と行き来するので覚えておく）
+    private Vector2 _assistantAnchorMin;
+    private Vector2 _assistantAnchorMax;
+    private Vector2 _assistantPos;
+    private Vector3 _assistantScale;
 
     // アクティブな状態で起動した場合はStartで初期化
     private void Start() => Initialize();
@@ -99,6 +104,8 @@ public class PreBattleDialogueManager : MonoBehaviour
             if (entry.changeVisibility)
                 ApplyVisibility(entry);
 
+            PlaceAssistant(entry.assistantAtEnemyPosition);
+
             // 発言キャラを前面に・他をグレーアウト
             UpdateSpeakerHighlight(entry.speaker);
 
@@ -106,6 +113,8 @@ public class PreBattleDialogueManager : MonoBehaviour
             if (entry.bounce)
                 StartCoroutine(PlayBounce(GetSpriteForSpeaker(entry.speaker)));
 
+            // ナレーションでは話者名の枠（名前テキストの親）ごと隠す
+            speakerNameText.transform.parent.gameObject.SetActive(entry.ShowsSpeakerName);
             speakerNameText.text = GetSpeakerName(entry.speaker);
             _advanceRequested = false;
 
@@ -186,8 +195,8 @@ public class PreBattleDialogueManager : MonoBehaviour
     {
         if (!dialoguePanel.activeSelf) return;
 
-        // クリック・スペース・Enterで次へ
-        if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Return))
+        // クリック・スペース・Enterで次へ（ボタンなどのクリックは除く）
+        if (DialogueInput.AdvancePressed())
             _advanceRequested = true;
     }
 
@@ -206,6 +215,34 @@ public class PreBattleDialogueManager : MonoBehaviour
             enemySprite.GetComponent<RectTransform>().sizeDelta *= 10.29f;
         }
 
+        RectTransform assistant = assistantSprite.rectTransform;
+        _assistantAnchorMin = assistant.anchorMin;
+        _assistantAnchorMax = assistant.anchorMax;
+        _assistantPos = assistant.anchoredPosition;
+        _assistantScale = assistant.localScale;
+    }
+
+    /// <summary>
+    /// アシスタントを元の位置（プレイヤーの隣）か、敵の位置（画面右側）に置く。
+    /// 敵の位置ではプレイヤーのいる左を向かせる（元の絵は右向き）
+    /// </summary>
+    private void PlaceAssistant(bool atEnemyPosition)
+    {
+        RectTransform assistant = assistantSprite.rectTransform;
+        if (!atEnemyPosition)
+        {
+            assistant.anchorMin = _assistantAnchorMin;
+            assistant.anchorMax = _assistantAnchorMax;
+            assistant.anchoredPosition = _assistantPos;
+            assistant.localScale = _assistantScale;
+            return;
+        }
+
+        RectTransform enemy = enemySprite.rectTransform;
+        assistant.anchorMin = enemy.anchorMin;
+        assistant.anchorMax = enemy.anchorMax;
+        assistant.anchoredPosition = enemy.anchoredPosition;
+        assistant.localScale = new Vector3(-Mathf.Abs(_assistantScale.x), _assistantScale.y, _assistantScale.z);
     }
 
     /// <summary>

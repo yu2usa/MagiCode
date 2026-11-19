@@ -13,6 +13,7 @@ ScriptedImporter:
   assetBundleName: 
   assetBundleVariant: 
   script: {fileID: 11500000, guid: 62a9f0aa5b59740cfbadc7e5f9823bb0, type: 3}
+  importerVersion: 2
   textureImporterSettings:
     alphaSource: 1
     mipMapMode: 0
@@ -82,6 +83,7 @@ ScriptedImporter:
     defaultPivotSpace: 0
     defaultPivotAlignment: 7
     customPivotPosition: {x: 0.5, y: 0.5}
+    mosaicPadding: 4
     spritePadding: 0
     generateModelPrefab: 1
     generateAnimationClips: 1
@@ -94,6 +96,7 @@ ScriptedImporter:
     defaultPivotSpace: 0
     defaultPivotAlignment: 7
     customPivotPosition: {x: 0.5, y: 0.5}
+    mosaicPadding: 4
     spritePadding: 0
     generateModelPrefab: 1
     generateAnimationClips: 1
@@ -108,6 +111,7 @@ ScriptedImporter:
     pivot: {x: 0, y: 0}
     alignment: 0
     border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
     rect:
       serializedVersion: 2
       x: 0
@@ -129,6 +133,7 @@ ScriptedImporter:
     pivot: {x: 0.6315789, y: -2}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
     rect:
       serializedVersion: 2
       x: 184
@@ -149,6 +154,7 @@ ScriptedImporter:
     pivot: {x: 0.41176474, y: -0.021276597}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
     rect:
       serializedVersion: 2
       x: 4
@@ -169,6 +175,7 @@ ScriptedImporter:
     pivot: {x: 0.36363637, y: 0}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
     rect:
       serializedVersion: 2
       x: 49
@@ -189,6 +196,7 @@ ScriptedImporter:
     pivot: {x: 0.43243238, y: 0}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
     rect:
       serializedVersion: 2
       x: 4
@@ -209,6 +217,7 @@ ScriptedImporter:
     pivot: {x: 0.44736844, y: 0}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
     rect:
       serializedVersion: 2
       x: 90
@@ -229,6 +238,7 @@ ScriptedImporter:
     pivot: {x: 0.47500002, y: 0}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
     rect:
       serializedVersion: 2
       x: 136
@@ -249,6 +259,7 @@ ScriptedImporter:
     pivot: {x: 0.5135135, y: 0}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
     rect:
       serializedVersion: 2
       x: 4
@@ -269,6 +280,7 @@ ScriptedImporter:
     pivot: {x: 0.5135135, y: -0.04}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
     rect:
       serializedVersion: 2
       x: 184
@@ -289,6 +301,7 @@ ScriptedImporter:
     pivot: {x: 0.54545456, y: -0.09677419}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
     rect:
       serializedVersion: 2
       x: 184
@@ -309,6 +322,7 @@ ScriptedImporter:
     pivot: {x: 0.5217391, y: -0.2962963}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
     rect:
       serializedVersion: 2
       x: 184
@@ -329,6 +343,7 @@ ScriptedImporter:
     pivot: {x: 0.45238099, y: -0.61538464}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
     rect:
       serializedVersion: 2
       x: 184
@@ -349,6 +364,7 @@ ScriptedImporter:
     pivot: {x: 0.4390244, y: -1.4375}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
     rect:
       serializedVersion: 2
       x: 184
@@ -367,102 +383,119 @@ ScriptedImporter:
   spriteSheetImportData: []
   asepriteLayers:
   - layerIndex: 0
-    guid: 1661578216
+    uuid:
+      value0: 3693313416
+      value1: 0
+      value2: 0
+      value3: 0
+    guid: -601653880
     name: lightning
     layerFlags: 0
     layerType: 0
     blendMode: 0
     cells:
-    - name: lightning_Frame_0
+    - name: Frame_0
       frameIndex: 0
+      additiveSortOrder: 0
       cellRect:
         x: 12
         y: 64
         width: 19
         height: 32
       spriteId: e564bdec688b8974ab35f1b8c98f96ee
-    - name: lightning_Frame_1
+    - name: Frame_1
       frameIndex: 1
+      additiveSortOrder: 0
       cellRect:
         x: 10
         y: 2
         width: 34
         height: 94
       spriteId: de1a3833bff74024fb2a479fb9326459
-    - name: lightning_Frame_2
+    - name: Frame_2
       frameIndex: 2
+      additiveSortOrder: 0
       cellRect:
         x: 12
         y: 0
         width: 33
         height: 96
       spriteId: 1b169ec5e3e5c504a93fe56eacf75230
-    - name: lightning_Frame_3
+    - name: Frame_3
       frameIndex: 3
+      additiveSortOrder: 0
       cellRect:
         x: 8
         y: 0
         width: 37
         height: 96
       spriteId: d95a309a2b4e0ae49916096af3497d83
-    - name: lightning_Frame_4
+    - name: Frame_4
       frameIndex: 4
+      additiveSortOrder: 0
       cellRect:
         x: 7
         y: 0
         width: 38
         height: 72
       spriteId: fa4460165459b8d4d803eca0d716304f
-    - name: lightning_Frame_5
+    - name: Frame_5
       frameIndex: 5
+      additiveSortOrder: 0
       cellRect:
         x: 5
         y: 0
         width: 40
         height: 63
       spriteId: 36eec5e4db7044741a5105cce9ba41ca
-    - name: lightning_Frame_6
+    - name: Frame_6
       frameIndex: 6
+      additiveSortOrder: 0
       cellRect:
         x: 5
         y: 0
         width: 37
         height: 35
       spriteId: 29a27d5783f3f1c47aa0855f89b9cdb4
-    - name: lightning_Frame_7
+    - name: Frame_7
       frameIndex: 7
+      additiveSortOrder: 0
       cellRect:
         x: 5
         y: 1
         width: 37
         height: 25
       spriteId: 80038a2f9cdd4574e8879088efbededb
-    - name: lightning_Frame_8
+    - name: Frame_8
       frameIndex: 8
+      additiveSortOrder: 0
       cellRect:
         x: 0
         y: 3
         width: 44
         height: 31
       spriteId: ecb4879bb64f578429aa4aada67c50ad
-    - name: lightning_Frame_9
+    - name: Frame_9
       frameIndex: 9
+      additiveSortOrder: 0
       cellRect:
         x: 0
         y: 8
         width: 46
         height: 27
       spriteId: f5cde18e953e42949b3994a91193cf39
-    - name: lightning_Frame_10
+    - name: Frame_10
       frameIndex: 10
+      additiveSortOrder: 0
       cellRect:
         x: 5
         y: 16
         width: 42
         height: 26
       spriteId: f13d29de6c5b17249a280515f15c4e34
-    - name: lightning_Frame_11
+    - name: Frame_11
       frameIndex: 11
+      additiveSortOrder: 0
       cellRect:
         x: 6
         y: 23
@@ -532,6 +565,8 @@ ScriptedImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     androidETC2FallbackOverride: 0
+  generatePhysicsShape: 0
   secondarySpriteTextures: []
   spritePackingTag: 
   canvasSize: {x: 48, y: 96}
+  previousTextureSize: {x: 256, y: 256}

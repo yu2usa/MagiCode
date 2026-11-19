@@ -10,13 +10,10 @@ public class EnemyController : MonoBehaviour
     // デフォルト値（EnemyData未設定時のフォールバック）
     private const int DEFAULT_ATTACK_DAMAGE = 3;
     private const int DEFAULT_MAX_HEALTH = 10;
-    private const float MOVE_DURATION = 0.8f;
+    private const float DEFAULT_WALK_SPEED = 4.5f;
     private const float DEFENSE_DELAY = 0.2f;
     private const float PRE_MOVE_DELAY = 1.0f;
     private const float ACTION_TIMEOUT = 10.0f;
-
-    // DOTween識別用ID
-    public const string ENEMY_TWEEN_ID = "EnemyTween";
 
     [Header("Enemy Data (ScriptableObject)")]
     public EnemyData enemyData;
@@ -44,6 +41,13 @@ public class EnemyController : MonoBehaviour
     // 属性フェーズが有効かどうか（EnemyManager から参照）
     public bool HasElementPhases => _elementPhases.Count > 0;
 
+    // このターンの攻撃ごとの属性の並び（[n] = n回目の攻撃を受けるときの属性。[0] はフェーズ開始時の属性）。
+    // プレイヤーのコードはサーバーで先にまとめて実行されるので、同じ並びを Python 側にも渡して
+    // コードの if で読む enemy.element と、攻撃が当たるときの属性をそろえる
+    private const int ElementPlanLength = 50;
+    private readonly List<DamageType> _elementPlan = new List<DamageType>();
+    public IReadOnlyList<DamageType> ElementPlan => _elementPlan;
+
     // StageConfig から取得したエリア位置
     private List<Vector2> _enemyAreas;
 
@@ -59,6 +63,10 @@ public class EnemyController : MonoBehaviour
     public float healthBarOffsetY = -10f;
     [Tooltip("ダメージ表示のPrefab（未設定時は自動生成）")]
     public GameObject damageIndicatorPrefab;
+    [Tooltip("攻撃が当たったときに表示するヒットエフェクトのPrefab")]
+    public GameObject hitEffectPrefab;
+    [Tooltip("敵が受けたダメージ（プレイヤーが与えたダメージ）の表示色")]
+    public Color damageIndicatorColor = new Color(0.3f, 1f, 0.3f);
     [Tooltip("属性ガード時の「GUARD」テキスト表示Prefab（未設定時はスキップ）")]
     public GameObject guardIndicatorPrefab;
     [Tooltip("HP全回復時のテキスト表示Prefab（damageIndicatorPrefabと同じものを設定可）")]
@@ -244,9 +252,7 @@ public class EnemyController : MonoBehaviour
         // シーン内オブジェクトの自動検索（Prefabから参照できないため）
         AutoFindSceneReferences();
 
-        // 必須参照のチェック
-        if (enemySlash == null)
-            Debug.LogError($"[{gameObject.name}] enemySlash が未設定です");
+        // 必須参照のチェック（斬撃エフェクトは持たない敵もいるので任意）
         if (_playerController == null)
             Debug.LogError($"[{gameObject.name}] PlayerController が見つかりません");
         if (_turnController == null)
@@ -665,13 +671,36 @@ public class EnemyController : MonoBehaviour
             return;
 
         // 属性フェーズメカニクス: 現在の属性（None以外）と一致しない攻撃はガード
-        if (_elementPhases.Count > 0 && element != DamageType.None && damageType != element)
+        if (IsGuardedAgainst(damageType))
         {
             StartCoroutine(DamagedGuard());
             return;
         }
 
+        HitStop.Instance.Play(FinalDamage(damageNum), transform, IsLethal(damageNum, damageType));
         StartCoroutine(Damaged(damageNum));
+    }
+
+    /// <summary>
+    /// この攻撃を受けたら倒れるか（とどめの一撃の判定用。GetDamaged と同じ条件で判定する）
+    /// </summary>
+    public bool IsLethal(int damageNum, DamageType damageType)
+    {
+        if (enemyHealth <= 0) return false;
+        if (enemyData != null && enemyData.isInvincible) return false;
+        if (IsGuardedAgainst(damageType) || blockIncomingDamage) return false;
+        return FinalDamage(damageNum) >= enemyHealth;
+    }
+
+    private bool IsGuardedAgainst(DamageType damageType)
+    {
+        return _elementPhases.Count > 0 && element != DamageType.None && damageType != element;
+    }
+
+    // forceDamageが設定されている場合は固定ダメージ（CoreBossメカニクス用）、それ以外はソートボス倍率を適用
+    private int FinalDamage(int damageAmount)
+    {
+        return forceDamage > 0 ? forceDamage : Mathf.RoundToInt(damageAmount * incomingDamageMultiplier);
     }
 
     /// <summary>
@@ -694,13 +723,24 @@ public class EnemyController : MonoBehaviour
     }
 
     /// <summary>
-    /// 属性プールからランダムに属性を選択し、形態変化演出を再生する。
-    /// EnemyManager と PlayerController から yield return で待機可能。
+    /// このターンの攻撃ごとの属性を属性プールからランダムに決め、最初の属性へ形態変化する。
+    /// EnemyManager から yield return で待機可能。
     /// </summary>
     public IEnumerator RandomizeElement()
     {
         if (_elementPhases.Count == 0) yield break;
-        element = _elementPhases[Random.Range(0, _elementPhases.Count)];
+        _elementPlan.Clear();
+        for (int i = 0; i < ElementPlanLength; i++)
+            _elementPlan.Add(_elementPhases[Random.Range(0, _elementPhases.Count)]);
+        yield return StartCoroutine(ChangeToPlannedElement(0));
+    }
+
+    /// <summary>
+    /// attackIndex 回目（0始まり）の攻撃を受ける前の形態変化。並びを使い切ったら先頭から繰り返す（Python 側も同じ）
+    /// </summary>
+    public IEnumerator ChangeToPlannedElement(int attackIndex)
+    {
+        element = _elementPlan[attackIndex % _elementPlan.Count];
         yield return StartCoroutine(PhaseChangeEffect());
     }
 
@@ -857,7 +897,7 @@ public class EnemyController : MonoBehaviour
         if (string.IsNullOrEmpty(actionDesc))
             return "";
 
-        return $"{enemyType}が{actionDesc}をします";
+        return $"{enemyType}: {actionDesc}";
     }
 
     /// <summary>
@@ -884,7 +924,7 @@ public class EnemyController : MonoBehaviour
     }
 
     /// <summary>
-    /// アクション内容から予告文の動詞部分を生成する
+    /// アクション内容から予告文の「エリア○, ○ダメージの攻撃」の部分を生成する
     /// AttackAction / MultiAttackAction / MagicAttackAction に対応。それ以外は "" を返す
     /// </summary>
     private string BuildAttackTelegraph(EnemyAction action)
@@ -892,20 +932,21 @@ public class EnemyController : MonoBehaviour
         if (action is AttackAction atk)
         {
             int area = atk.targetArea >= 0 ? atk.targetArea : enemyCurrentPos;
-            return $"エリア{area}で{atk.damage}ダメージの攻撃";
+            return $"エリア{area}, {atk.damage}ダメージの攻撃";
         }
 
         if (action is MultiAttackAction multi)
         {
-            string areas = string.Join(", ", multi.targetAreas);
-            return $"エリア{areas}で{multi.damage}ダメージの攻撃";
+            // 区切りの「, 」はダメージの前に使うので、複数エリアは「・」でつなぐ
+            string areas = string.Join("・", multi.targetAreas);
+            return $"エリア{areas}, {multi.damage}ダメージの攻撃";
         }
 
         if (action is MagicAttackAction magic)
         {
             // targetArea == -1 の場合は PrepareNextAttack() で確定済みの LockedAttackArea を使用
             int area = magic.targetArea >= 0 ? magic.targetArea : _actionContext.LockedAttackArea;
-            return $"エリア{area}へ{magic.damageType}魔法攻撃({magic.damage}ダメージ)";
+            return $"エリア{area}, {magic.damage}ダメージの攻撃";
         }
 
         return "";
@@ -1102,10 +1143,7 @@ public class EnemyController : MonoBehaviour
         Vector3 finalPos = new Vector3(areaPos.x + offsetX, areaPos.y + offsetY, transform.position.z);
 
         yield return new WaitForSeconds(0.1f);
-        yield return transform.DOMove(finalPos, GetMoveDuration())
-            .SetId(ENEMY_TWEEN_ID)
-            .SetEase(Ease.OutQuad)
-            .WaitForCompletion();
+        yield return CharacterMotion.WalkTo(transform, finalPos, GetWalkSpeed());
         int oldPosFwd = enemyCurrentPos;
         enemyCurrentPos = targetPos;
 
@@ -1147,10 +1185,7 @@ public class EnemyController : MonoBehaviour
         Vector3 finalPos = new Vector3(areaPos.x + offsetX, areaPos.y + offsetY, transform.position.z);
 
         yield return new WaitForSeconds(0.1f);
-        yield return transform.DOMove(finalPos, GetMoveDuration())
-            .SetId(ENEMY_TWEEN_ID)
-            .SetEase(Ease.OutQuad)
-            .WaitForCompletion();
+        yield return CharacterMotion.WalkTo(transform, finalPos, GetWalkSpeed());
         int oldPosBwd = enemyCurrentPos;
         enemyCurrentPos = targetPos;
 
@@ -1167,11 +1202,11 @@ public class EnemyController : MonoBehaviour
     }
 
     /// <summary>
-    /// 移動時間を取得（EnemyDataから、なければデフォルト値）
+    /// 歩行速度を取得（EnemyDataから、なければデフォルト値）
     /// </summary>
-    public float GetMoveDuration()
+    public float GetWalkSpeed()
     {
-        return enemyData != null ? enemyData.moveDuration : MOVE_DURATION;
+        return enemyData != null ? enemyData.walkSpeed : DEFAULT_WALK_SPEED;
     }
 
     /// <summary>
@@ -1321,20 +1356,19 @@ public class EnemyController : MonoBehaviour
 
     IEnumerator Damaged(int damageAmount)
     {
+        // ヒットストップで揺れている間は待ち、止まり終わってからのけぞる（揺れとのけぞりの位置がずれないように）
+        yield return HitStop.Instance.WaitUntilResumed();
+
         // ダメージ無効化フラグが有効な場合（KeyGolemメカニクス等）：0ダメージ表示してコールバック発火
         if (blockIncomingDamage)
         {
-            DamageIndicator.SpawnFromPrefab(damageIndicatorPrefab, transform.position, 0);
+            DamageIndicator.SpawnFromPrefab(damageIndicatorPrefab, transform.position, 0, damageIndicatorColor);
             if (_flashEffect != null) _flashEffect.Flash();
             onHitWhileBlocked?.Invoke();
             yield break;
         }
 
-        // forceDamageが設定されている場合は固定ダメージ（CoreBossメカニクス用）
-        // それ以外はソートボス倍率を適用
-        int finalDamage = forceDamage > 0
-            ? forceDamage
-            : Mathf.RoundToInt(damageAmount * incomingDamageMultiplier);
+        int finalDamage = FinalDamage(damageAmount);
         Debug.Log($"[{gameObject.name}] Damaged: {finalDamage} (元={damageAmount}, 倍率={incomingDamageMultiplier:F2}), 現在位置: {transform.position}");
 
         // オーバーキル判定用に累積ダメージを記録
@@ -1345,23 +1379,22 @@ public class EnemyController : MonoBehaviour
         UpdateHealthUI();
 
         // ダメージインジケーター表示
-        DamageIndicator.SpawnFromPrefab(damageIndicatorPrefab, transform.position, finalDamage);
+        DamageIndicator.SpawnFromPrefab(damageIndicatorPrefab, transform.position, finalDamage, damageIndicatorColor);
 
         // 0ダメージ時は演出をスキップ
         if (finalDamage <= 0) yield break;
+
+        HitEffect.Spawn(hitEffectPrefab, _spriteRenderer);
+        _turnController.record.damageDealt += finalDamage;
 
         // 白フラッシュ効果
         if (_flashEffect != null)
             _flashEffect.Flash();
 
         // ノックバック（右へ0.5移動）して元の位置に戻る
-        float originalX = transform.position.x;
-        yield return transform.DOMoveX(originalX + 0.5f, 0.15f)
-            .SetEase(Ease.OutQuad)
-            .WaitForCompletion();
-        yield return transform.DOMoveX(originalX, 0.15f)
-            .SetEase(Ease.InQuad)
-            .WaitForCompletion();
+        Vector3 originalPos = transform.position;
+        yield return CharacterMotion.MoveOver(transform, originalPos + Vector3.right * 0.5f, 0.15f, CharacterMotion.EaseOut);
+        yield return CharacterMotion.MoveOver(transform, originalPos, 0.15f, CharacterMotion.EaseIn);
 
         Debug.Log($"[{gameObject.name}] ノックバック完了: 現在位置 {transform.position}");
 
@@ -1524,6 +1557,6 @@ public class EnemyController : MonoBehaviour
 
         Vector2 areaCenter = areas[enemyCurrentPos];
         Vector3 targetPos = new Vector3(areaCenter.x + offsetX, areaCenter.y + offsetY, transform.position.z);
-        transform.DOMove(targetPos, 0.3f).SetId(ENEMY_TWEEN_ID).SetEase(Ease.OutQuad);
+        StartCoroutine(CharacterMotion.MoveOver(transform, targetPos, 0.3f, CharacterMotion.EaseOut));
     }
 }

@@ -1,36 +1,35 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-[ExecuteAlways]
+/// <summary>
+/// ç”»é¢ã®ç¸¦æ¨ªæ¯”ãŒå¤‰ã‚ã£ã¦ã‚‚ã€è¨­è¨ˆä¸Šã®ç¯„å›²ï¼ˆaspectVec ã®æ¯”ç‡ï¼‰ãŒå¿…ãšç”»é¢å†…ã«åã¾ã‚‹ã‚ˆã†ã«ã‚«ãƒ¡ãƒ©ã®è¡¨ç¤ºç¯„å›²ã‚’åºƒã’ã‚‹ã€‚
+/// é»’å¸¯ã¯å‡ºã•ãšã€è¨­è¨ˆã‚ˆã‚Šæ¨ªé•·ã®ç”»é¢ã§ã¯å·¦å³ã€ç¸¦é•·ã®ç”»é¢ã§ã¯ä¸Šä¸‹ãŒåºƒãè¦‹ãˆã‚‹
+/// </summary>
 public class AspectKeeper : MonoBehaviour
 {
     [SerializeField]
-    private Camera targetCamera; //‘ÎÛ‚Æ‚·‚éƒJƒƒ‰
+    private Camera targetCamera; // å¯¾è±¡ã¨ã™ã‚‹ã‚«ãƒ¡ãƒ©
 
     [SerializeField]
-    private Vector2 aspectVec; //–Ú“I‰ğ‘œ“x
+    private Vector2 aspectVec; // è¨­è¨ˆæ™‚ã®è§£åƒåº¦ï¼ˆç¸¦æ¨ªæ¯”ã¨ã—ã¦ä½¿ã†ï¼‰
+
+    private float _baseSize;
+
+    void Awake()
+    {
+        _baseSize = targetCamera.orthographicSize;
+        targetCamera.rect = new Rect(0, 0, 1, 1);
+    }
 
     void Update()
     {
-        var screenAspect = Screen.width / (float)Screen.height; //‰æ–Ê‚ÌƒAƒXƒyƒNƒg”ä
-        var targetAspect = aspectVec.x / aspectVec.y; //–Ú“I‚ÌƒAƒXƒyƒNƒg”ä
+        targetCamera.orthographicSize = _baseSize * WidthFitScale(targetCamera.aspect, aspectVec.x / aspectVec.y);
+    }
 
-        var magRate = targetAspect / screenAspect; //–Ú“IƒAƒXƒyƒNƒg”ä‚É‚·‚é‚½‚ß‚Ì”{—¦
-
-        var viewportRect = new Rect(0, 0, 1, 1); //Viewport‰Šú’l‚ÅRect‚ğì¬
-
-        if (magRate < 1)
-        {
-            viewportRect.width = magRate; //g—p‚·‚é‰¡•‚ğ•ÏX
-            viewportRect.x = 0.5f - viewportRect.width * 0.5f;//’†‰›Šñ‚¹
-        }
-        else
-        {
-            viewportRect.height = 1 / magRate; //g—p‚·‚éc•‚ğ•ÏX
-            viewportRect.y = 0.5f - viewportRect.height * 0.5f;//’†‰›—]¶
-        }
-
-        targetCamera.rect = viewportRect; //ƒJƒƒ‰‚ÌViewport‚É“K—p
+    /// <summary>
+    /// è¨­è¨ˆæ™‚ã®æ¨ªå¹…ã‚’ç”»é¢ã«åã‚ã‚‹ãŸã‚ã«ã€è¡¨ç¤ºç¯„å›²ã‚’ç¸¦æ–¹å‘ã¸ä½•å€ã«åºƒã’ã‚‹ã‹ï¼ˆè¨­è¨ˆã‚ˆã‚Šæ¨ªé•·ã®ç”»é¢ãªã‚‰ 1ï¼‰
+    /// </summary>
+    private static float WidthFitScale(float screenAspect, float designAspect)
+    {
+        return Mathf.Max(1f, designAspect / screenAspect);
     }
 }

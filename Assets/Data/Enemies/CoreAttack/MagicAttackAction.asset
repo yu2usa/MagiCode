@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   actionName: 
   telegraphMessage: 
-  enemyAnimationTrigger: 
+  enemyAnimationTrigger: Action
   damage: 3
   damageType: 0
   targetArea: -1

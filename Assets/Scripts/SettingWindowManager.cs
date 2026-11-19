@@ -1,18 +1,19 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// 設定ウィンドウの開閉。ほかのウィンドウと同じく、背景をグレーアウトしながら下からスライドして出す
+/// </summary>
 public class SettingWindowManager : MonoBehaviour
 {
-    [SerializeField] GameObject settingWindow;
+    [SerializeField] SlideWindow settingWindow;
+
     public void OpenSettingWindow()
     {
-        settingWindow.SetActive(true);
+        settingWindow.Open();
     }
 
     public void CloseSettingWindow()
     {
-        settingWindow.SetActive(false);
+        settingWindow.Close();
     }
-
 }

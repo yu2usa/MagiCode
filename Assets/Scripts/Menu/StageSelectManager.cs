@@ -57,12 +57,19 @@ public class StageSelectManager : MonoBehaviour
     [SerializeField] private TMP_Text stageDescriptionText;
     [Tooltip("バトルシーンへ遷移する入場ボタン")]
     [SerializeField] private Button enterButton;
+    [Tooltip("ステージ選択時にクローズアップする背景とマップ")]
+    [SerializeField] private MenuCameraZoom cameraZoom;
     [Tooltip("パネル外クリック検出用の全画面透明ボタン（Hierarchyでパネルより下に配置）")]
     [SerializeField] private Button overlayButton;
     [Tooltip("スライドインのアニメーション時間（秒）")]
     [SerializeField] private float slideInDuration = 0.35f;
     [Tooltip("スライドインのイージング")]
     [SerializeField] private Ease slideInEase = Ease.OutQuart;
+    [Tooltip("閉じるときに右へ戻る時間（秒）")]
+    [SerializeField] private float slideOutDuration = 0.4f;
+    // 閉じた直後の重いフレームで大半が動いて一瞬に見えないよう、カメラが戻る動きと同じく動き出しをゆっくりにする
+    [Tooltip("閉じるときのイージング")]
+    [SerializeField] private Ease slideOutEase = Ease.InOutCubic;
 
     private StageConfig _selectedConfig;
     // Inspectorで設定したパネルの表示位置（X座標）を記憶する
@@ -76,7 +83,8 @@ public class StageSelectManager : MonoBehaviour
         foreach (var entry in stageButtons)
         {
             StageConfig config = entry.stageConfig;
-            entry.button.onClick.AddListener(() => ShowStageDetail(config));
+            var buttonRect = (RectTransform)entry.button.transform;
+            entry.button.onClick.AddListener(() => ShowStageDetail(config, buttonRect));
         }
 
         // 入場ボタンのリスナー登録
@@ -217,28 +225,39 @@ public class StageSelectManager : MonoBehaviour
     }
 
     /// <summary>
-    /// ステージボタンクリック時に詳細パネルの内容を更新し、右からスライドインで表示する
+    /// ステージボタンクリック時に詳細パネルの内容を更新し、右からスライドインで表示する。
+    /// 同時にカメラを押したボタンへクローズアップする
     /// </summary>
-    private void ShowStageDetail(StageConfig config)
+    private void ShowStageDetail(StageConfig config, RectTransform button)
     {
+        cameraZoom.FocusOn(button);
+
         _selectedConfig = config;
         stageTitleText.text = config.stageName;
         stageDescriptionText.text = config.stageDescription;
 
         // オーバーレイを有効化してパネル外クリックを受け取る
         overlayButton.gameObject.SetActive(true);
+        overlayButton.interactable = true;
 
         // 右からスライドイン（すでに開いていれば上書きアニメーションで更新）
+        detailPanel.DOKill();
         detailPanel.DOAnchorPosX(_panelShownX, slideInDuration).SetEase(slideInEase);
     }
 
     /// <summary>
-    /// パネルを右へスライドアウトして閉じる
+    /// パネルを右へスライドアウトして閉じ、カメラを元に戻す
     /// </summary>
     private void HideStageDetail()
     {
-        overlayButton.gameObject.SetActive(false);
-        detailPanel.DOAnchorPosX(_panelHiddenX, slideInDuration).SetEase(slideInEase);
+        cameraZoom.ResetZoom();
+
+        // 詳細パネルはオーバーレイの子なので、オーバーレイを消すのはパネルが右へ戻りきってから。
+        // 戻っている途中にもう一度押されないよう、その間はクリックを受け付けない
+        overlayButton.interactable = false;
+        detailPanel.DOKill();
+        detailPanel.DOAnchorPosX(_panelHiddenX, slideOutDuration).SetEase(slideOutEase)
+            .OnComplete(() => overlayButton.gameObject.SetActive(false));
     }
 
     /// <summary>

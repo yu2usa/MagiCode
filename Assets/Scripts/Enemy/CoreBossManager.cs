@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using DG.Tweening;
 using TMPro;
 using UnityEngine;
 
@@ -19,7 +18,8 @@ public class CoreBossManager : MonoBehaviour
 
     [Header("スワップアニメーション")]
     [SerializeField] private float swapDuration = 0.5f;
-    [SerializeField] private Ease swapEase = Ease.OutQuad;
+    [Tooltip("入れ替え移動の進み方（横軸: 経過割合、縦軸: 進み具合）")]
+    [SerializeField] private AnimationCurve swapCurve = AnimationCurve.Linear(0f, 0f, 1f, 1f);
 
     [Header("数字ラベル")]
     [Tooltip("トーテム頭上の数字ラベルのY軸オフセット")]
@@ -119,7 +119,7 @@ public class CoreBossManager : MonoBehaviour
     /// </summary>
     public IEnumerator ResetToInitialState()
     {
-        var lastTween = default(Tween);
+        Coroutine lastMove = null;
         foreach (var totem in coreTotems)
         {
             if (totem == null || !_initialAreas.ContainsKey(totem)) continue;
@@ -128,13 +128,12 @@ public class CoreBossManager : MonoBehaviour
 
             var areas = totem.EnemyAreas;
             Vector3 target = new Vector3(areas[initArea].x, areas[initArea].y, totem.transform.position.z);
-            DOTween.Kill(totem.transform);
-            lastTween = totem.transform.DOMove(target, swapDuration).SetEase(swapEase);
+            lastMove = StartCoroutine(CharacterMotion.MoveOver(totem.transform, target, swapDuration, swapCurve));
             totem.enemyCurrentPos = initArea;
         }
 
-        if (lastTween != null)
-            yield return lastTween.WaitForCompletion();
+        if (lastMove != null)
+            yield return lastMove;
 
         RefreshCoreDefense();
         Debug.Log("[CoreBossManager] 未ソート: トーテムを初期位置にリセット");
@@ -158,7 +157,7 @@ public class CoreBossManager : MonoBehaviour
     }
 
     /// <summary>
-    /// numbers配列のインデックスj番目とk番目のCoreTotemをDOTweenでスワップする。
+    /// numbers配列のインデックスj番目とk番目のCoreTotemをスワップする。
     /// j, k はPython側の0始まりリストインデックス（エリア番号ではない）
     /// </summary>
     public IEnumerator SwapTotems(int j, int k)
@@ -184,10 +183,8 @@ public class CoreBossManager : MonoBehaviour
         Vector3 targetForJ = new Vector3(areas[areaK].x, areas[areaK].y, totemJ.transform.position.z);
         Vector3 targetForK = new Vector3(areas[areaJ].x, areas[areaJ].y, totemK.transform.position.z);
 
-        DOTween.Kill(totemJ.transform);
-        DOTween.Kill(totemK.transform);
-        totemJ.transform.DOMove(targetForJ, swapDuration).SetEase(swapEase);
-        yield return totemK.transform.DOMove(targetForK, swapDuration).SetEase(swapEase).WaitForCompletion();
+        StartCoroutine(CharacterMotion.MoveOver(totemJ.transform, targetForJ, swapDuration, swapCurve));
+        yield return CharacterMotion.MoveOver(totemK.transform, targetForK, swapDuration, swapCurve);
 
         // エリア番号を更新
         totemJ.enemyCurrentPos = areaK;

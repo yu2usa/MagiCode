@@ -86,3 +86,17 @@ Assets/BlocksEngine2.meta
 # TextMesh Pro generated SDF font assets (regenerate in Unity after cloning)
 *SDF.asset
 *SDF.asset.meta
+
+# Claude の作業用（バックアップ・メモ）
+_backup_claude/
+claude_reflections/
+
+# Claude の作業用（バックアップ・メモ）
+_backup_claude/
+claude_reflections/
+
+# Claude の作業用（バックアップ・メモ・改善案）
+_backup_claude/
+claude_reflections/
+GameSystemImprovement_Sakurai.md
+GameSystemImprovement_Sakurai.md

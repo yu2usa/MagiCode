@@ -30,9 +30,10 @@ MonoBehaviour:
   deathAnimationType: 1
   deathAnimatorTrigger: Death
   deathAnimationDuration: 0.5
+  attackSE: {fileID: 0}
   slashEffectPrefab: {fileID: 0}
   maxHealth: 1
-  moveDuration: 0.8
+  walkSpeed: 4.5
   regenHealthOnTurnEnd: 0
   punishOverkill: 0
   overkillPunishDamage: 3

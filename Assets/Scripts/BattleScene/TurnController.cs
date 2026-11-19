@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using DG.Tweening;
+using UnityEngine.SceneManagement;
 
 public enum Phase { Attack, Defense }
 public enum Actor { Player, Enemy }
@@ -75,10 +76,16 @@ public class TurnController : MonoBehaviour
     public GameObject editorLineHighlight;
     [Tooltip("コード入力欄（InputFieldにフォーカスしたときパーティクルを表示する）")]
     [SerializeField] TMP_InputField codeInputField;
+    [Tooltip("再挑戦のとき、前回のコードを色付き表示ごと戻すためのエディタ")]
+    [SerializeField] private InGameCodeEditor.CodeEditor codeEditor;
 
     [Header("Coding Particle")]
     [Tooltip("コード入力中にプレイヤー位置に表示するパーティクル（PlayerCodeEffect）")]
     [SerializeField] GameObject codingParticle;
+
+    [Header("Terrain")]
+    [Tooltip("StageConfig.terrainSprite で差し替える地形背景（左右に並べたタイルすべて）")]
+    [SerializeField] SpriteRenderer[] terrainRenderers;
 
     [Header("LeftWindowUI")]
     public GameObject leftWindow;
@@ -132,6 +139,10 @@ public class TurnController : MonoBehaviour
     [SerializeField] private CanvasGroup fadeOverlay;
     [Tooltip("フェードインにかかる時間（秒）")]
     [SerializeField] private float fadeInDuration = 2f;
+    [Tooltip("敗北画面から再挑戦したときのフェードイン時間（秒）。すぐ遊び直せるよう短くする")]
+    [SerializeField] private float retryFadeInDuration = 0.3f;
+    [Tooltip("同じステージで何回負けたら、敗北画面に「ヒントを見る」を出すか")]
+    [SerializeField] private int defeatsBeforeHint = 3;
     [Tooltip("戦闘開始演出UI（dialogue後・バトル開始前に表示）")]
     [SerializeField] private GameObject battleStartUI;
     [Tooltip("戦闘開始演出の表示時間（秒）")]
@@ -142,6 +153,12 @@ public class TurnController : MonoBehaviour
     public GameObject victoryUI;
     [Tooltip("プレイヤー死亡時に表示するDefeat演出UI")]
     public GameObject defeatUI;
+    [Tooltip("コード実行中・敵の行動中の画面（UIを退かせてレターボックスを出す）")]
+    [SerializeField] private BattleActionView actionView;
+    // この戦闘の戦績（勝利画面に表示する）
+    public readonly BattleRecord record = new BattleRecord();
+    [Tooltip("戦闘終了時にUIが画面外へ退く時間（秒）")]
+    [SerializeField] private float uiSlideOutDuration = 0.25f;
 
     [Header("BehaviourPattern")]
     public List<string> enemyAttackBehaviour;
@@ -162,6 +179,9 @@ public class TurnController : MonoBehaviour
     private CanvasGroup _playerTurnUICanvasGroup;
     private CanvasGroup _enemyTurnUICanvasGroup;
     private List<GameObject> _eanInstances = new List<GameObject>();
+    // 予告一覧のマス（GridLayoutGroup）と、シーンで決めた元のマスの高さ。文字が収まらないときだけここから高くする
+    private UnityEngine.UI.GridLayoutGroup _eanGrid;
+    private float _eanBaseCellHeight;
     private List<string> _nextEnemyAttackMessages = new List<string>();
     // 敵が次フェーズで攻撃するエリア番号リスト（警告マーク表示用）
     private List<int> _nextEnemyAttackAreas = new List<int>();
@@ -171,6 +191,8 @@ public class TurnController : MonoBehaviour
 
     // バトル終了フラグ（二重呼び出し防止）
     private bool _battleEnded = false;
+    // 敗北画面から再挑戦したときに持ち越したコード（null なら通常の入場）
+    private string _retryCode;
 
     void Start()
     {
@@ -179,6 +201,8 @@ public class TurnController : MonoBehaviour
         _leftWindowCanvasGroup = leftWindow.GetComponent<CanvasGroup>();
         _codeWindowRect = codeWindow.GetComponent<RectTransform>();
         _leftWindowRect = leftWindow.GetComponent<RectTransform>();
+        _eanGrid = eanContentParent.GetComponent<UnityEngine.UI.GridLayoutGroup>();
+        _eanBaseCellHeight = _eanGrid.cellSize.y;
         _turnStartUICanvasGroup = turnStartUI.GetComponent<CanvasGroup>();
 
         if (playerTurnUI != null)
@@ -203,6 +227,8 @@ public class TurnController : MonoBehaviour
             stageConfig = StageLoader.pendingStage;
             StageLoader.pendingStage = null;
         }
+        _retryCode = StageLoader.retryCode;
+        StageLoader.retryCode = null;
 
         // stageConfigが未設定のときはデフォルトにフォールバック
         if (stageConfig == null && defaultStageConfig != null)
@@ -232,6 +258,10 @@ public class TurnController : MonoBehaviour
         // オーバーレイはStart()内で既にalpha=1なので、生成されたUIは見えない
         yield return null;
 
+        // 再挑戦なら前回のコードを入力欄に戻す（コードウィンドウを隠す前に入れて表示を更新させる）
+        if (_retryCode != null)
+            codeEditor.Text = _retryCode;
+
         // 全Start()完了後に要素を非表示にし、オーバーレイを最前面へ
         // （新規生成UIがオーバーレイより上になっていても、ここで確実に隠す）
         HidePreBattleElements();
@@ -240,12 +270,14 @@ public class TurnController : MonoBehaviour
         if (fadeOverlay != null)
         {
             fadeOverlay.transform.SetAsLastSibling();
-            yield return fadeOverlay.DOFade(0f, fadeInDuration).SetEase(Ease.InQuad).WaitForCompletion();
+            float duration = _retryCode != null ? retryFadeInDuration : fadeInDuration;
+            yield return fadeOverlay.DOFade(0f, duration).SetEase(Ease.InQuad).WaitForCompletion();
             fadeOverlay.gameObject.SetActive(false);
         }
 
-        // バトル前会話演出（introDialogueが設定されている場合のみ）
-        if (preBattleDialogue != null
+        // バトル前会話演出（introDialogueが設定されている場合のみ。再挑戦では飛ばす）
+        if (_retryCode == null
+            && preBattleDialogue != null
             && stageConfig != null
             && stageConfig.introDialogue != null
             && stageConfig.introDialogue.Count > 0)
@@ -406,6 +438,11 @@ public class TurnController : MonoBehaviour
         // ステージ固有の BGM を再生
         if (stageConfig.bgmClip != null)
             AudioManager.Instance?.PlayBGM(stageConfig.bgmClip);
+
+        // ステージ固有の背景に差し替え
+        if (stageConfig.terrainSprite != null)
+            foreach (var terrain in terrainRenderers)
+                terrain.sprite = stageConfig.terrainSprite;
 
         // 設定の検証
         if (!stageConfig.Validate())
@@ -615,6 +652,8 @@ public class TurnController : MonoBehaviour
             tmp.fontSize = areaLabelFontSize;
             tmp.color = areaLabelColor;
             tmp.alignment = TextAlignmentOptions.Center;
+            // 防御フェーズに地面へ重ねる危険エリアの帯（描画順 -1）より必ず手前に描く
+            tmp.sortingOrder = 1;
             if (areaLabelFont != null)
                 tmp.font = areaLabelFont;
 
@@ -765,6 +804,10 @@ public class TurnController : MonoBehaviour
     // ==============================================================
     IEnumerator RunPhase(Actor actor, Phase phase)
     {
+        // 敵の行動中は、必要なUI以外を退かせてレターボックスを出す（出きってから少し間を置いて行動する）
+        if (actor == Actor.Enemy)
+            yield return actionView.Enter();
+
         // ターン切り替え演出（アクターが変わった時のみ）
         if (actor != _previousActor)
         {
@@ -852,50 +895,93 @@ public class TurnController : MonoBehaviour
             Debug.LogWarning($"[TurnController] 勝利しましたがクリアデータを保存できません: stageConfig={stageConfig?.stageName ?? "null"}");
         }
 
-        // 敗北時にアドバイス表示用のステージ名をセット（defeatAdvice が設定されているときのみ）
-        if (!playerWon && stageConfig != null && !string.IsNullOrEmpty(stageConfig.defeatAdvice))
-        {
-            StageLoader.justDefeatedStageName = stageConfig.stageName;
-        }
-
-        // バトル関連UIを全て非表示
-        codeWindow.SetActive(false);
-        leftWindow.SetActive(false);
-        guardPhaseUI.SetActive(false);
-        attackPhaseUI.SetActive(false);
-        turnStartUI.SetActive(false);
-        if (playerTurnUI != null)  playerTurnUI.SetActive(false);
-        if (enemyTurnUI != null)   enemyTurnUI.SetActive(false);
+        // バトル関連UIを画面外へ退かせる（とどめの一撃で退かせ済みの場合もある）
+        SlideOutBattleUI();
         if (telegraphText != null) telegraphText.gameObject.SetActive(false);
         if (codingParticle != null) codingParticle.SetActive(false);
         if (editorLineHighlight != null) editorLineHighlight.SetActive(false);
         ClearEnemyAttackNotification();
-        if (playerController != null) playerController.HideStatusUI();
-
-        GameObject resultUI = playerWon ? victoryUI : defeatUI;
-        if (resultUI != null)
-            StartCoroutine(ShowResultUI(resultUI));
 
         Debug.Log($"[TurnController] バトル終了: {(playerWon ? "Victory" : "Defeat")}");
+        if (playerWon)
+        {
+            StartCoroutine(ShowVictory());
+            return;
+        }
+        StartCoroutine(ShowDefeat());
     }
 
     /// <summary>
-    /// 結果UIをフェードイン＋スケールアップで表示する
+    /// 同じステージを、今のコードを入力欄に残したまま読み直す（戦闘前の会話は飛ばす）
     /// </summary>
-    IEnumerator ShowResultUI(GameObject resultUI)
+    private void RetryStage()
+    {
+        StageLoader.pendingStage = stageConfig;
+        StageLoader.retryCode = codeInputField.text;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    /// <summary>
+    /// 指定した敵が倒れたら勝利になるか（とどめの一撃の判定。IsPlayerVictory と同じ条件）
+    /// </summary>
+    public bool WouldWinAfter(List<EnemyController> defeated)
+    {
+        var coreBoss = CoreBossManager.Instance?.coreBoss;
+        if (coreBoss != null && defeated.Contains(coreBoss)) return true;
+        return enemyManager.AliveEnemies.TrueForAll(defeated.Contains);
+    }
+
+    /// <summary>
+    /// 戦闘終了時に、キャンバス上のUIを近い画面端の外へ素早く退かせる。
+    /// ダメージ表示だけは残す。とどめのスロー演出中でも素早く動くよう実時間で動かす
+    /// </summary>
+    public void SlideOutBattleUI()
+    {
+        var canvasRect = (RectTransform)codeWindow.transform.parent;
+        Vector2 canvasSize = canvasRect.rect.size;
+        foreach (RectTransform ui in canvasRect)
+        {
+            if (!ui.gameObject.activeSelf || StaysOnScreen(ui)) continue;
+
+            ui.DOKill();
+            ui.DOAnchorPos(ui.anchoredPosition + BattleActionView.OffscreenOffset(ui, canvasRect, canvasSize), uiSlideOutDuration)
+                .SetEase(Ease.InQuad)
+                .SetUpdate(true)
+                .OnComplete(() => ui.gameObject.SetActive(false));
+        }
+    }
+
+    // ダメージ表示と、この後に使う結果UI・画面フェードは退かせない
+    private bool StaysOnScreen(RectTransform ui)
+    {
+        return ui.GetComponent<DamageIndicator>() != null
+            || ui.gameObject == victoryUI
+            || ui.gameObject == defeatUI
+            || ui == fadeOverlay.transform;
+    }
+
+    /// <summary>
+    /// 勝利画面（ロゴ → グレーアウト → 戦績）を表示する
+    /// </summary>
+    IEnumerator ShowVictory()
     {
         yield return new WaitForSeconds(1f);
-        resultUI.SetActive(true);
+        yield return victoryUI.GetComponent<VictoryScreen>().Play(record);
+    }
 
-        var cg = resultUI.GetComponent<CanvasGroup>();
-        if (cg != null)
-        {
-            cg.alpha = 0f;
-            cg.DOFade(1f, 0.5f).SetEase(Ease.OutQuad);
-        }
+    /// <summary>
+    /// 敗北画面（ロゴ → グレーアウト → アドバイスと再挑戦ボタン）を表示する。
+    /// アドバイスはメニューに戻ってからではなく、ここでその場で見せる
+    /// </summary>
+    IEnumerator ShowDefeat()
+    {
+        // 同じステージで何度も負けたら、答えのひな形を見られるようにする（詰んでやめてしまわないように）
+        int defeats = StageLoader.defeatCounts.GetValueOrDefault(stageConfig.stageName) + 1;
+        StageLoader.defeatCounts[stageConfig.stageName] = defeats;
+        string hint = defeats >= defeatsBeforeHint ? stageConfig.rescueHint : null;
 
-        resultUI.transform.localScale = Vector3.one * 0.7f;
-        yield return resultUI.transform.DOScale(1f, 0.5f).SetEase(Ease.OutBack).WaitForCompletion();
+        yield return new WaitForSeconds(1f);
+        yield return defeatUI.GetComponent<DefeatScreen>().Play(stageConfig.defeatAdvice, hint, RetryStage);
     }
 
     // ==============================================================
@@ -944,6 +1030,9 @@ public class TurnController : MonoBehaviour
 
     IEnumerator PlayerAttack()
     {
+        record.turns++;
+        actionView.Exit();
+
         // KeyGolemメカニクスにプレイヤー攻撃フェーズ開始を通知
         FindObjectOfType<KeyGolemMechanic>()?.NotifyPlayerAttackStart();
 
@@ -951,6 +1040,11 @@ public class TurnController : MonoBehaviour
         playerController?.RecoverAP();
 
         yield return PhaseUIEffect(attackPhaseUI);
+
+        // 属性フェーズを持つ敵は、このターンの攻撃ごとの属性をここで決め、1回目の攻撃の属性へ変化させる。
+        // 2回目以降は攻撃を受ける前に毎回変化する（PlayerController.Execution）。
+        // コードはサーバーで先にまとめて実行されるので、同じ並びを LogsManager が Python 側にも渡している
+        yield return StartCoroutine(enemyManager.TriggerAllElementChanges());
 
         // チュートリアルヒントを表示
         ShowTutorialHint(Phase.Attack);
@@ -962,12 +1056,14 @@ public class TurnController : MonoBehaviour
 
         yield return new WaitUntil(() => isCodeInputReady);
 
-        // コード実行開始 → ヒントを非表示
+        // コード実行開始 → ヒントを非表示・入力を無効化・パーティクルも確実に消す
         HideTutorialHint();
-
-        // コード実行中は入力を無効化・パーティクルも確実に消す
         _codeWindowCanvasGroup.interactable = false;
         HideCodingParticle();
+
+        // 必要なUI以外を退かせてレターボックスを出し、出きってから少し間を置いて行動を始める
+        yield return actionView.Enter();
+        playerController.Execute();
 
         yield return new WaitUntil(() => isPlayerActionComplete);
         yield return new WaitForSeconds(0.1f);
@@ -995,6 +1091,7 @@ public class TurnController : MonoBehaviour
 
     IEnumerator PlayerDefense()
     {
+        actionView.Exit();
         yield return PhaseUIEffect(guardPhaseUI);
 
         // チュートリアルヒントを表示
@@ -1021,22 +1118,24 @@ public class TurnController : MonoBehaviour
 
         yield return new WaitUntil(() => isCodeInputReady);
 
-        // コード実行開始 → ヒントを非表示
+        // コード実行開始 → ヒントを非表示・入力を無効化・パーティクルも確実に消す
         HideTutorialHint();
-
-        // コード実行中は入力を無効化・パーティクルも確実に消す
         _codeWindowCanvasGroup.interactable = false;
         HideCodingParticle();
 
-        // アクション（アニメーション）完了まで待機
-        yield return new WaitUntil(() => isPlayerActionComplete);
-        yield return new WaitForSeconds(0.1f);
-
-        // 予告テキストを非表示・EANウィンドウと警告マークをクリア
+        // 予告テキスト・EANウィンドウ・警告マークは入力の参考用なので、実行が始まったら消す
         if (telegraphText != null)
             telegraphText.gameObject.SetActive(false);
         ClearEnemyAttackNotification();
         attackWarningSystem?.HideAllWarnings();
+
+        // 必要なUI以外を退かせてレターボックスを出し、出きってから少し間を置いて行動を始める
+        yield return actionView.Enter();
+        playerController.Execute();
+
+        // アクション（アニメーション）完了まで待機
+        yield return new WaitUntil(() => isPlayerActionComplete);
+        yield return new WaitForSeconds(0.1f);
 
         Debug.Log("プレイヤーが防御体勢に入った！");
         isCodeInputReady = false;
@@ -1110,6 +1209,7 @@ public class TurnController : MonoBehaviour
     /// </summary>
     private void ShowCodingParticle()
     {
+        playerController.StartOrbAnimation();
         if (codingParticle == null) return;
         codingParticle.transform.position = playerController.transform.position;// + new Vector3(0f, 0.6f, 0f); これは、パーティクルが円のちゅうしんに収束するような演出に付けるときは必要
         codingParticle.SetActive(true);
@@ -1120,6 +1220,7 @@ public class TurnController : MonoBehaviour
     /// </summary>
     private void HideCodingParticle()
     {
+        playerController.EndOrbAnimation();
         if (codingParticle == null) return;
         codingParticle.SetActive(false);
     }
@@ -1188,12 +1289,25 @@ public class TurnController : MonoBehaviour
     void ShowEnemyAttackNotification()
     {
         if (eanContentPrefab == null || eanContentParent == null) return;
+
+        // 文字が文字欄に収まらない項目があれば、その行数ぶん文字欄とマスを高くする。
+        // マスは全項目で同じ高さなので、いちばん長い文に合わせる
+        float cellHeight = _eanBaseCellHeight;
         foreach (string msg in _nextEnemyAttackMessages)
         {
             GameObject instance = Instantiate(eanContentPrefab, eanContentParent);
-            instance.GetComponentInChildren<TMP_Text>().text = msg;
+            TMP_Text text = instance.GetComponentInChildren<TMP_Text>();
+            text.text = msg;
             _eanInstances.Add(instance);
+
+            RectTransform textRect = text.rectTransform;
+            float overflow = text.GetPreferredValues(msg, textRect.rect.width, 0f).y - textRect.rect.height;
+            if (overflow <= 0f) continue;
+
+            textRect.sizeDelta += new Vector2(0f, overflow);
+            cellHeight = Mathf.Max(cellHeight, _eanBaseCellHeight + overflow);
         }
+        _eanGrid.cellSize = new Vector2(_eanGrid.cellSize.x, cellHeight);
     }
 
     // 表示中のEAN_Contentを全て破棄

@@ -8,6 +8,9 @@ public enum DialogueSpeaker
     Player,
     Assistant,
     Enemy,
+    // 誰のセリフでもない地の文。話者名の枠を隠し、キャラクターは全員グレーアウトする
+    // （既存の会話データの番号がずれないよう末尾に追加している）
+    Narration,
 }
 
 /// <summary>
@@ -36,7 +39,17 @@ public class DialogueEntry
     [Tooltip("敵を表示する")]
     public bool showEnemy;
 
+    [Tooltip("ONのとき、このセリフではアシスタントを敵の位置（画面右側）に出し、プレイヤーの方を向かせる")]
+    public bool assistantAtEnemyPosition;
+
     [Header("敵スプライト選択")]
     [Tooltip("表示する敵のインデックス（0 = 1体目、1 = 2体目...）")]
     public int enemyIndex = 0;
+
+    [Header("話者名欄")]
+    [Tooltip("ONにすると、このセリフ中は話者名の枠ごと非表示にする（ナレーションなどに使用）")]
+    public bool hideSpeakerName = false;
+
+    /// <summary>話者名の枠を出すか（ナレーションか hideSpeakerName のときは出さない）</summary>
+    public bool ShowsSpeakerName => speaker != DialogueSpeaker.Narration && !hideSpeakerName;
 }

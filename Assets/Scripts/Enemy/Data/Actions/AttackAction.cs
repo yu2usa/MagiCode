@@ -41,14 +41,6 @@ public class AttackAction : EnemyAction
 
         Debug.Log($"[AttackAction] targetArea={targetArea}, EnemyPos={context.EnemyPosition}, 攻撃エリア={attackArea}, プレイヤー位置={playerPos} (context={context.PlayerPosition})");
 
-        // スラッシュ or Shockwave エフェクト配置・再生
-        var slash = useShockwave ? context.Enemy.enemyShockwave : context.Enemy.enemySlash;
-        if (slash == null)
-        {
-            Debug.LogError($"[AttackAction] エフェクト({(useShockwave ? "enemyShockwave" : "enemySlash")}) が null です！ Enemy={context.Enemy.name}");
-            yield break;
-        }
-
         var areaList = context.Enemy.EnemyAreas;
         if (areaList == null || attackArea >= areaList.Count)
         {
@@ -56,16 +48,10 @@ public class AttackAction : EnemyAction
             yield break;
         }
 
-        Vector3 slashPos = areaList[attackArea];
-        slashPos.y += 0.5f;
-        slash.transform.position = slashPos;
-        slash.SetActive(true);
-
-        var animator = slash.GetComponent<Animator>();
-        if (animator != null)
-        {
-            animator.SetTrigger(slashAnimationTrigger);
-        }
+        // スラッシュ or Shockwave エフェクト配置・再生（エフェクトを持たない敵は攻撃モーションだけで攻撃する）
+        var slash = useShockwave ? context.Enemy.enemyShockwave : context.Enemy.enemySlash;
+        if (slash != null)
+            PlayEffect(slash, areaList[attackArea]);
         CameraShake.Shake();
 
         yield return new WaitForSeconds(animationDuration);
@@ -85,8 +71,20 @@ public class AttackAction : EnemyAction
             Debug.Log($"[AttackAction] ミス (攻撃エリア{attackArea} != プレイヤー位置{playerPos})");
         }
 
-        slash.SetActive(false);
+        if (slash != null)
+            slash.SetActive(false);
         Debug.Log("[AttackAction] 攻撃完了");
+    }
+
+    private void PlayEffect(GameObject slash, Vector3 areaPos)
+    {
+        areaPos.y += 0.5f;
+        slash.transform.position = areaPos;
+        slash.SetActive(true);
+
+        var animator = slash.GetComponent<Animator>();
+        if (animator != null)
+            animator.SetTrigger(slashAnimationTrigger);
     }
 
     public override string GetDescription()

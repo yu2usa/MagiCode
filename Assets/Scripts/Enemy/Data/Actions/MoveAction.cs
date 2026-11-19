@@ -1,6 +1,5 @@
 using System.Collections;
 using UnityEngine;
-using DG.Tweening;
 
 /// <summary>
 /// 移動アクション
@@ -59,20 +58,13 @@ public class MoveAction : EnemyAction
 
         Debug.Log($"[MoveAction] 移動開始: {context.EnemyPosition} → {newPosition}");
 
-        // EnemyDataの移動時間を使用
-        float duration = context.Enemy.GetMoveDuration();
-
         // 移動先でのオフセットを計算（同じエリアに他の敵がいる場合）
         float offsetX = context.Enemy.GetMoveTargetOffset(newPosition);
         float offsetY = context.Enemy.GetPositionOffsetY();
         Vector2 targetPos = areas[newPosition];
         Vector3 finalPos = new Vector3(targetPos.x + offsetX, targetPos.y + offsetY, context.Enemy.transform.position.z);
 
-        yield return context.Enemy.transform
-            .DOMove(finalPos, duration)
-            .SetId(EnemyController.ENEMY_TWEEN_ID)
-            .SetEase(Ease.OutQuad)
-            .WaitForCompletion();
+        yield return CharacterMotion.WalkTo(context.Enemy.transform, finalPos, context.Enemy.GetWalkSpeed());
 
         context.Enemy.enemyCurrentPos = newPosition;
 

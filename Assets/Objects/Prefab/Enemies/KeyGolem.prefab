@@ -51,6 +51,9 @@ SpriteRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -75,7 +78,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 1021369689971768109, guid: f2381ec6398bb5b42b9709e64c731b62,
+  m_Sprite: {fileID: -2595024724838364490, guid: 48e5b2d1a439a184aadcdb1fd9252de9,
     type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 1
@@ -89,7 +92,7 @@ SpriteRenderer:
   m_SpriteSortPoint: 0
 --- !u!95 &4428461071104048347
 Animator:
-  serializedVersion: 5
+  serializedVersion: 7
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -103,6 +106,7 @@ Animator:
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
@@ -144,6 +148,9 @@ MonoBehaviour:
   healthBarOffsetY: -10
   damageIndicatorPrefab: {fileID: 8782528604501982964, guid: 794b1a69bf27f04448b8ba256386b3ef,
     type: 3}
+  hitEffectPrefab: {fileID: 9167450929148389231, guid: ef0d7400183614f4e927521d758228fd,
+    type: 3}
+  damageIndicatorColor: {r: 0.3, g: 1, b: 0.3, a: 1}
   guardIndicatorPrefab: {fileID: 0}
   healIndicatorPrefab: {fileID: 0}
   healIndicatorColor: {r: 0.3, g: 1, b: 0.4, a: 1}

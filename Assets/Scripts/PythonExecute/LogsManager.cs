@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 using UnityEngine;
 using NativeWebSocket;
@@ -22,6 +23,10 @@ public class LogsListManager : MonoBehaviour
 
     [Header("Python Code")]
     public TMP_InputField pythonCodeInputField;
+    [Tooltip("エラー行に行ハイライトを動かすためのエディタ")]
+    [SerializeField] private InGameCodeEditor.CodeEditor codeEditor;
+    // AP 不足を知らせたコード。同じコードで再実行されたら、知らせずにそのまま実行する
+    private string _apWarnedCode;
 
     public GameObject strategy_manual;
     public GameObject ai_assistant;
@@ -172,7 +177,7 @@ public class LogsListManager : MonoBehaviour
 
         foreach (var error in errorLogs)
         {
-            string errorLine = $"[Line {error.line:D2}] {error.message}";
+            string errorLine = $"[Line {error.line:D2}] {PythonErrorMessages.ToJapanese(error.message)}";
             errorStrings.Add(errorLine);
         }
 
@@ -266,7 +271,7 @@ public class LogsListManager : MonoBehaviour
         }
 
         // 敵の状態（属性・HP）をコード先頭に注入
-        // Python dict 形式: enemy['element'], enemy['hp'], enemies[0]['element'] でアクセス
+        // EnemyInfo は server.py が用意する dict で、enemy.element / enemy['element'] のどちらでも読める
         // print(enemy) / print(enemies) でも内容を確認できる
         var enemyManager = FindObjectOfType<EnemyManager>();
         if (enemyManager != null)
@@ -274,17 +279,16 @@ public class LogsListManager : MonoBehaviour
             var aliveEnemies = enemyManager.AliveEnemies;
             if (aliveEnemies.Count > 0)
             {
-                // dict を使用（JSON シリアライズ可能なためサーバーエラーを回避）
-                // アクセス方法: enemy['element'], enemy['hp']
                 var entries = aliveEnemies.ConvertAll(e =>
-                    $"{{'element': '{DamageTypeToJapanese(e.element)}', 'hp': {e.enemyHealth}}}");
+                    $"EnemyInfo(element='{DamageTypeToJapanese(e.element)}', hp={e.enemyHealth})");
 
                 string enemyBlock =
                     $"enemies = [{string.Join(", ", entries)}]\n" +
-                    "enemy = enemies[0]\n";
+                    "enemy = enemies[0]\n" +
+                    BuildElementPlanBlock(aliveEnemies);
 
                 code = enemyBlock + code;
-                _prependedLineCount += 2;
+                _prependedLineCount += enemyBlock.Split('\n').Length - 1;
                 Debug.Log($"[LogsManager] 敵情報注入: enemies=[{string.Join(", ", entries)}]");
             }
         }
@@ -314,6 +318,9 @@ public class LogsListManager : MonoBehaviour
 
         // リストの内容を表示
         DisplayLogsFromList();
+
+        // 実行のたびに新しく接続するため、結果を受け取ったら閉じる（開きっぱなしだとサーバー側に接続が溜まる）
+        _ = webSocket.Close();
     }
 
     void ParseAndAddToLists(string jsonResponse)
@@ -400,7 +407,11 @@ public class LogsListManager : MonoBehaviour
 
                 foreach (JObject errorObj in errorsArray)
                 {
+                    string errorMessage = errorObj["msg"]?.ToString() ?? "";
                     int rawErrorLine = errorObj["line"]?.ToObject<int>() ?? 0;
+                    // 構文エラーは行番号がメッセージの中にしか無いので、そこから取り出す
+                    if (rawErrorLine == 0)
+                        rawErrorLine = PythonErrorMessages.LineInSyntaxError(errorMessage);
                     // 先頭挿入行分だけオフセットを引き、最小1行目に補正
                     int adjustedErrorLine = Mathf.Max(1, rawErrorLine - _prependedLineCount);
 
@@ -409,7 +420,7 @@ public class LogsListManager : MonoBehaviour
                         type = "error",
                         step = errorObj["s"]?.ToObject<int>() ?? 0,
                         line = adjustedErrorLine,
-                        message = errorObj["msg"]?.ToString() ?? ""
+                        message = errorMessage
                     };
 
                     errorLogs.Add(errorEntry);
@@ -523,15 +534,48 @@ public class LogsListManager : MonoBehaviour
         if (errorLogs.Count > 0 || securityLogs.Count > 0)
         {
             ShowWarningMessage();
+            if (errorLogs.Count > 0)
+                StartCoroutine(MoveCaretToLine(errorLogs[0].line));
             return;
         }
+
+        // エリア番号が範囲外の行動は実行前に止める（そのまま実行するとターンが進まなくなる）
+        var playerController = player.GetComponent<PlayerController>();
+        string rangeError = playerController.FindOutOfRangeAction(executionLogs);
+        if (rangeError != null)
+        {
+            if (warningUI != null && _warningText != null)
+            {
+                _warningText.text = rangeError;
+                warningUI.SetActive(true);
+            }
+            return;
+        }
+
+        // 途中で AP が足りなくなるコードは、動き出す前に一度だけ止めて知らせる。
+        // わざとそのまま実行したいこともあるので、同じコードでもう一度押されたら実行する
+        string code = pythonCodeInputField.text;
+        var shortage = playerController.FindAPShortage(executionLogs, code, out int shortBy);
+        if (shortage != null && code != _apWarnedCode)
+        {
+            _apWarnedCode = code;
+            // 吹き出しが狭いので、1行ずつ折り返さない長さに分ける
+            _warningText.text = $"{shortage.line}行目でAPが{shortBy}不足\nもう一度「実行」を押すと\nそのまま実行します";
+            warningUI.SetActive(true);
+            playerController.FlashAPGauge();
+            StartCoroutine(MoveCaretToLine(shortage.line));
+            return;
+        }
+        _apWarnedCode = null;
 
         // 警告UIを非表示にしてから実行
         if (warningUI != null)
             warningUI.SetActive(false);
 
-        player.GetComponent<PlayerController>().Execute();
-        turnController.GetComponent<TurnController>().isCodeInputReady = true;
+        // 行動の開始は TurnController が行う（レターボックスを出して少し間を置いてから）
+        var tc = turnController.GetComponent<TurnController>();
+        tc.record.cleanRuns++;
+        tc.isCodeInputReady = true;
     }
 
     /// <summary>
@@ -595,7 +639,7 @@ public class LogsListManager : MonoBehaviour
             var violations = new List<string>();
             foreach (var keyword in _checkableKeywords)
             {
-                if (stageConfig.allowedKeywords.Contains(keyword)) continue;
+                if (IsAllowedKeyword(stageConfig.allowedKeywords, keyword)) continue;
                 if (Regex.IsMatch(code, $@"\b{Regex.Escape(keyword)}\b"))
                     violations.Add(keyword);
             }
@@ -624,6 +668,43 @@ public class LogsListManager : MonoBehaviour
 
         ShowRestrictionWarning(blocked);
         return false;
+    }
+
+    // else は if の続きとしてしか書けないので、if を使えるステージでは else も使えるようにする
+    private static bool IsAllowedKeyword(List<string> allowedKeywords, string keyword)
+    {
+        return allowedKeywords.Contains(keyword) || (keyword == "else" && allowedKeywords.Contains("if"));
+    }
+
+    /// <summary>
+    /// 属性フェーズを持つ敵がいるとき、Cast / Attack を呼ぶたびに enemy.element を次の属性へ進める Python コードを返す。
+    /// ゲーム側（PlayerController.Execution）でも同じ並びで攻撃を受ける前に形態変化するので、
+    /// コードの if で読んだ属性と攻撃が当たるときの属性が一致する。属性フェーズを持つ敵がいなければ空文字
+    /// </summary>
+    private static string BuildElementPlanBlock(List<EnemyController> aliveEnemies)
+    {
+        if (!aliveEnemies.Exists(e => e.HasElementPhases)) return "";
+
+        // 敵ごとの並び（属性フェーズのない敵は空のリスト）
+        var plans = aliveEnemies.ConvertAll(e =>
+            "[" + string.Join(", ", e.ElementPlan.Select(t => $"'{DamageTypeToJapanese(t)}'")) + "]");
+
+        // 名前を _ で始めると、実行後の変数一覧（finalResult）に出ない
+        return
+            $"_element_plans = [{string.Join(", ", plans)}]\n" +
+            "def _next_element(_targets=enemies, _plans=_element_plans, _count=[0]):\n" +
+            "    _count[0] += 1\n" +
+            "    for _e, _p in zip(_targets, _plans):\n" +
+            "        if _p:\n" +
+            "            _e['element'] = _p[_count[0] % len(_p)]\n" +
+            "def Cast(spell, n, _cast=Cast, _next=_next_element):\n" +
+            "    _result = _cast(spell, n)\n" +
+            "    _next()\n" +
+            "    return _result\n" +
+            "def Attack(_attack=Attack, _next=_next_element):\n" +
+            "    _result = _attack()\n" +
+            "    _next()\n" +
+            "    return _result\n";
     }
 
     /// <summary>
@@ -660,11 +741,13 @@ public class LogsListManager : MonoBehaviour
 
         var lines = new List<string>();
 
-        // エラーの行番号をまとめる
+        // 最初のエラーの行と理由を見せる（1つ直すと後のエラーも消えることが多い）
         if (errorLogs.Count > 0)
         {
-            string lineNums = string.Join("行、", errorLogs.ConvertAll(e => e.line.ToString()));
-            lines.Add($"{lineNums}行にエラーがあります");
+            var first = errorLogs[0];
+            lines.Add($"{first.line}行目: {PythonErrorMessages.ToJapanese(first.message)}");
+            if (errorLogs.Count > 1)
+                lines.Add($"（ほかに{errorLogs.Count - 1}件）");
         }
 
         // セキュリティ警告の行番号をまとめる
@@ -676,6 +759,22 @@ public class LogsListManager : MonoBehaviour
 
         _warningText.text = string.Join("\n", lines);
         warningUI.SetActive(true);
+    }
+
+    // エラーのあった行の先頭にカーソルを置き、すぐ直せるようにする。
+    // 入力欄は有効化した瞬間に全選択になるので、1フレーム待ってからカーソルを置く
+    private IEnumerator MoveCaretToLine(int lineNumber)
+    {
+        pythonCodeInputField.ActivateInputField();
+        yield return null;
+
+        string text = pythonCodeInputField.text;
+        int index = 0;
+        for (int line = 1; line < lineNumber; line++)
+            index = text.IndexOf('\n', index) + 1;
+        pythonCodeInputField.caretPosition = index;
+        // エディタの行ハイライトはキー入力やクリックでしか動かないので、ここで合わせる
+        codeEditor.SetLineHighlight(lineNumber, false);
     }
 
     void Update()

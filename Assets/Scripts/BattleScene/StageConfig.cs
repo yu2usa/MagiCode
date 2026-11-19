@@ -66,6 +66,14 @@ public class StageConfig : ScriptableObject
     [Tooltip("このステージで流す BGM（未設定の場合は現在再生中の BGM を継続）")]
     public AudioClip bgmClip;
 
+    [Header("背景")]
+    [Tooltip("このステージの地形背景（未設定の場合はシーンに配置された背景をそのまま使用）")]
+    public Sprite terrainSprite;
+    [Tooltip("ON のとき、カメラが引いても地形の上から空がのぞかないよう、地形を画面の上端まで覆う大きさに拡大する（屋内のステージ用）")]
+    public bool terrainFillsScreenTop;
+    [Tooltip("メニュー画面で、このステージが画面の中央に来たときに背景へ出す壁紙（戦闘の背景を撮ったもの）")]
+    public Sprite menuWallpaper;
+
     [Header("バトル前演出")]
     [Tooltip("バトル開始前に表示する会話リスト（空の場合はスキップ）")]
     public List<DialogueEntry> introDialogue = new List<DialogueEntry>();
@@ -84,9 +92,13 @@ public class StageConfig : ScriptableObject
     public List<string> obtainedKeywords = new List<string>();
 
     [Header("敗北アドバイス")]
-    [Tooltip("敗北後にメニュー画面で表示するアドバイス文（空白の場合はウィンドウを表示しない）")]
+    [Tooltip("敗北画面に表示するアドバイス文（空白の場合は表示しない）")]
     [TextArea(2, 6)]
     public string defeatAdvice;
+
+    [Tooltip("何度も負けたとき、敗北画面の「ヒントを見る」で出す答えのひな形（数字などは ___ にして穴埋めにする）")]
+    [TextArea(3, 8)]
+    public string rescueHint;
 
     [Header("チュートリアルヒント")]
     [Tooltip("フェーズ開始時にアシスタントが発言するヒントのリスト")]

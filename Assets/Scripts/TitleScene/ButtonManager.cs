@@ -6,20 +6,36 @@ using DG.Tweening;
 
 public class ButtonManager : MonoBehaviour
 {
-    [SerializeField] GameObject creditWindow;
+    // ほかのウィンドウと同じく、背景をグレーアウトしながら下からスライドして出す
+    [SerializeField] SlideWindow creditWindow;
     
+    [Tooltip("ゲームを開始したとき、ボタン・ロゴ・立ち絵を画面の外へ出す演出")]
+    [SerializeField] TitleExitTransition exitTransition;
+
     public void StartGame()
     {
-        SceneManager.LoadScene("Menu");
+        StartCoroutine(StartGameAfterExit());
+    }
+
+    // タイトルの要素が画面の外へ出きってから、メニューへ移る
+    private IEnumerator StartGameAfterExit()
+    {
+        yield return exitTransition.Play();
+
+        var intro = FindObjectOfType<TitleIntroManager>();
+        if (intro != null && intro.ShouldPlay)
+            yield return intro.PlayIntroThenLoad("Menu");
+        else
+            SceneManager.LoadScene("Menu");
     }
 
     public void OpenCredit()
     {
-        creditWindow.SetActive(true);
+        creditWindow.Open();
     }
     public void CloseCredit()
     {
-        creditWindow.SetActive(false);
+        creditWindow.Close();
     }
 
     

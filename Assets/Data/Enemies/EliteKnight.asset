@@ -110,7 +110,7 @@ MonoBehaviour:
   m_Name: EliteKnight
   m_EditorClassIdentifier: 
   enemyName: "\u30B3\u30FC\u30C9\u306E\u9A0E\u58EB"
-  enemySprite: {fileID: 2279039340306815425, guid: 527c73d404289af448e2fad4b318268c,
+  enemySprite: {fileID: -3494000194560457024, guid: 07f4aa824b6ef2e45a9dfdf99ac3422c,
     type: 3}
   element: 0
   elementPhases: 
@@ -118,7 +118,7 @@ MonoBehaviour:
   elementAnimatorTriggers: []
   flipSpriteInDialogue: 0
   scale: {x: 5, y: 5, z: 1}
-  positionOffsetY: 0
+  positionOffsetY: -1.1999999
   animatorController: {fileID: 9100000, guid: 957859b7f8ffa3d4f9e75b7761ea1719, type: 2}
   attackAnimTrigger: Action
   moveAnimTrigger: Move
@@ -130,7 +130,7 @@ MonoBehaviour:
   attackSE: {fileID: 8300000, guid: 91628dd2f34190045a76f08382a13d98, type: 3}
   slashEffectPrefab: {fileID: 0}
   maxHealth: 12
-  moveDuration: 0.8
+  walkSpeed: 5
   regenHealthOnTurnEnd: 1
   punishOverkill: 0
   overkillPunishDamage: 3

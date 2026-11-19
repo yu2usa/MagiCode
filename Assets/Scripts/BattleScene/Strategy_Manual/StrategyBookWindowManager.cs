@@ -1,14 +1,20 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 using DG.Tweening;
 
 /// <summary>
 /// 攻略ブックウィンドウのタブ切り替えと表示を管理する。
 ///
+/// 開くときは背景をその場でグレーアウトしながら、本のパネルだけを上からスライドさせる
+/// （戦闘中の「メニューに戻る」確認ウィンドウと同じ作り）。
+///
 /// Hierarchy:
-///   StrategyBookWindow [このスクリプトをアタッチ + Button → Close()]
-///     ├── Image              (背景パネル)
+///   StrategyBookWindow [このスクリプトをアタッチ]
+///     ├── Outside            (画面全体の暗幕 + Button → Close())
+///     └── Window             (スライドする本のパネル)
+///           ├── Image              (背景パネル)
 ///     ├── GameSystemInst     [Button → ShowGameSystem()]
 ///     ├── ObtainedCode       [Button → ShowObtainedCodes()]
 ///     ├── Content            (TMP_Text — ゲームシステム説明用)
@@ -38,6 +44,12 @@ public class StrategyBookWindowManager : MonoBehaviour
     [Tooltip("キーワード説明文のマスターデータ")]
     [SerializeField] private KeywordDatabase keywordDatabase;
 
+    [Tooltip("クリックしたコードの例を貼り付けるコードエディタ（戦闘シーンだけ設定する。メニューの戦術書は空のまま）")]
+    [SerializeField] private InGameCodeEditor.CodeEditor codeEditor;
+
+    [Tooltip("説明文と習得コード一覧を入れたスクロール領域（本に収まらない分はスクロールで読む）")]
+    [SerializeField] private ScrollRect scroll;
+
     [Header("ツールチップ")]
     [Tooltip("ホバー時に表示するツールチップパネル")]
     [SerializeField] private GameObject tooltipPanel;
@@ -46,44 +58,64 @@ public class StrategyBookWindowManager : MonoBehaviour
     [SerializeField] private TMP_Text tooltipText;
 
     [Header("スライドアニメーション")]
-    [SerializeField] private float slideDuration = 0.35f;
-    [SerializeField] private Ease slideInEase  = Ease.OutCubic;
-    [SerializeField] private Ease slideOutEase = Ease.InCubic;
+    [Tooltip("上からスライドする本のパネル")]
+    [SerializeField] private RectTransform window;
+    [Tooltip("背景をグレーアウトする全画面の暗幕（その場でフェードする）")]
+    [SerializeField] private Image dim;
+    // 開いた直後のフレームは表示の準備で重くなりやすいので、動き出しがゆっくりなイージングにする
+    [SerializeField] private float slideInDuration = 0.4f;
+    [SerializeField] private Ease slideInEase = Ease.InOutCubic;
+    [SerializeField] private float slideOutDuration = 0.25f;
+    [SerializeField] private Ease slideOutEase = Ease.InQuad;
 
-    private RectTransform _rect;
-    private float _originalY;
+    private float _shownY;
+    private float _dimAlpha;
     private readonly List<GameObject> _spawnedItems = new List<GameObject>();
 
+    // シーンには非表示で置いておく。Awake は初めて Open() で表示したときに走るので、ここで自分を非表示にしてはいけない
+    // （以前はここで SetActive(false) していたため、1回目に開いた瞬間に閉じていた）
     private void Awake()
     {
-        _rect = GetComponent<RectTransform>();
-        _originalY = _rect.anchoredPosition.y;
-        gameObject.SetActive(false);
+        _shownY = window.anchoredPosition.y;
+        _dimAlpha = dim.color.a;
 
         if (tooltipPanel != null) tooltipPanel.SetActive(false);
     }
 
     public void Open()
     {
-        ShowGameSystem();
+        // タブは「獲得したコード」が上なので、開いたときもそちらを見せる
+        ShowObtainedCodes();
         gameObject.SetActive(true);
+        KillTweens();
 
-        float offscreenY = _originalY + _rect.rect.height;
-        _rect.anchoredPosition = new Vector2(_rect.anchoredPosition.x, offscreenY);
-
-        _rect.DOKill();
-        _rect.DOAnchorPosY(_originalY, slideDuration).SetEase(slideInEase);
+        // 本は画面の上の外から定位置へ、背景はその場でグレーアウト
+        window.anchoredPosition = new Vector2(window.anchoredPosition.x, HiddenY());
+        window.DOAnchorPosY(_shownY, slideInDuration).SetEase(slideInEase);
+        dim.color = new Color(dim.color.r, dim.color.g, dim.color.b, 0f);
+        dim.DOFade(_dimAlpha, slideInDuration);
     }
 
     public void Close()
     {
         HideTooltip();
-        float offscreenY = _originalY + _rect.rect.height;
-
-        _rect.DOKill();
-        _rect.DOAnchorPosY(offscreenY, slideDuration)
+        KillTweens();
+        dim.DOFade(0f, slideOutDuration);
+        window.DOAnchorPosY(HiddenY(), slideOutDuration)
             .SetEase(slideOutEase)
             .OnComplete(() => gameObject.SetActive(false));
+    }
+
+    // このウィンドウは画面いっぱいの大きさなので、その高さぶん上げれば画面外になる
+    private float HiddenY()
+    {
+        return _shownY + ((RectTransform)transform).rect.height;
+    }
+
+    private void KillTweens()
+    {
+        window.DOKill();
+        dim.DOKill();
     }
 
     /// <summary>
@@ -98,6 +130,7 @@ public class StrategyBookWindowManager : MonoBehaviour
         if (keywordContainer != null) keywordContainer.gameObject.SetActive(false);
 
         contentText.text = gameSystemExplanation;
+        ScrollToTop();
     }
 
     /// <summary>
@@ -132,6 +165,14 @@ public class StrategyBookWindowManager : MonoBehaviour
             if (keywordContainer != null) keywordContainer.gameObject.SetActive(false);
             contentText.text = "獲得したコードなし";
         }
+        ScrollToTop();
+    }
+
+    // タブを切り替えたとき・開き直したときは、前に読んでいた位置ではなく先頭から見せる
+    private void ScrollToTop()
+    {
+        scroll.StopMovement();
+        scroll.content.anchoredPosition = Vector2.zero;
     }
 
     // --- 内部メソッド ---
@@ -145,9 +186,32 @@ public class StrategyBookWindowManager : MonoBehaviour
         if (item != null)
         {
             string desc = keywordDatabase != null ? keywordDatabase.GetDescription(keyword) : "";
-            item.Setup(keyword, desc, ShowTooltip, HideTooltip);
+            string snippet = keywordDatabase != null ? keywordDatabase.GetSnippet(keyword) : "";
+
+            // 戦闘中の戦術書で、貼り付ける例があるものだけクリックで貼り付けられる
+            bool canPaste = codeEditor != null && !string.IsNullOrEmpty(snippet);
+            if (canPaste)
+                desc += "\n\n<color=#FFD966>クリックで入力欄に貼り付け</color>";
+            item.Setup(keyword, desc, ShowTooltip, HideTooltip, canPaste ? () => PasteSnippet(snippet) : null);
         }
         _spawnedItems.Add(obj);
+    }
+
+    /// <summary>
+    /// コードの例を入力欄の最後に足して、本を閉じる。
+    /// コードを実行している最中など入力できないときは、貼り付けずにそのことを知らせる
+    /// </summary>
+    private void PasteSnippet(string snippet)
+    {
+        if (!codeEditor.InputField.IsInteractable())
+        {
+            ShowTooltip("今はコードを入力できません。\n自分の番でコードを書くときに貼り付けられます");
+            return;
+        }
+
+        string code = codeEditor.Text.TrimEnd('\n', ' ');
+        codeEditor.Text = code.Length == 0 ? snippet : code + "\n" + snippet;
+        Close();
     }
 
     private void ClearKeywordItems()

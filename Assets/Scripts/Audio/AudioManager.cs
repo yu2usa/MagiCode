@@ -27,6 +27,9 @@ public class AudioManager : MonoBehaviour
     private AudioSource bgmSource;
     private AudioSource seSource;
     private Coroutine _bgmABCoroutine;
+    // 交互再生している曲の組み合わせ（同じ組み合わせを頼まれたら止めずに流し続ける）
+    private AudioClip _abClipA;
+    private AudioClip _abClipB;
 
     public float BGMVolume { get; private set; } = 0.5f;
     public float SEVolume  { get; private set; } = 1f;
@@ -75,11 +78,18 @@ public class AudioManager : MonoBehaviour
         bgmSource.Play();
     }
 
-    /// <summary>clipA → clipB → clipA ... と交互にループ再生する。</summary>
+    /// <summary>
+    /// clipA → clipB → clipA ... と交互にループ再生する。
+    /// タイトルとメニューは同じ組み合わせなので、すでに流れていればシーンを移っても途切れさせずに続ける
+    /// </summary>
     public void PlayBGMAB(AudioClip clipA, AudioClip clipB)
     {
+        if (_bgmABCoroutine != null && _abClipA == clipA && _abClipB == clipB) return;
+
         StopABLoop();
         bgmSource.loop = false;
+        _abClipA = clipA;
+        _abClipB = clipB;
         _bgmABCoroutine = StartCoroutine(ABLoop(clipA, clipB));
     }
 
@@ -101,6 +111,8 @@ public class AudioManager : MonoBehaviour
         if (_bgmABCoroutine == null) return;
         StopCoroutine(_bgmABCoroutine);
         _bgmABCoroutine = null;
+        _abClipA = null;
+        _abClipB = null;
     }
 
     /// <summary>BGM を停止する。</summary>

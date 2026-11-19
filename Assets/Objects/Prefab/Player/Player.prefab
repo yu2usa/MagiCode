@@ -51,6 +51,9 @@ SpriteRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -75,7 +78,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -2502414433850821536, guid: 4bbdc99c956001e4cad35f3efa7ea2f4,
+  m_Sprite: {fileID: 3699645999178865227, guid: 0b58c9523792b744590b881a36389764,
     type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -89,7 +92,7 @@ SpriteRenderer:
   m_SpriteSortPoint: 0
 --- !u!95 &2958719478595828330
 Animator:
-  serializedVersion: 5
+  serializedVersion: 7
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -97,12 +100,13 @@ Animator:
   m_GameObject: {fileID: 8560901427488743033}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 3c26779801cf5be4dabeb969630af855, type: 2}
+  m_Controller: {fileID: 9100000, guid: 79e2f1ae6c7ce824dafb3b06c8c360cb, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
@@ -120,16 +124,41 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26f85da29fb96d14490183271fb9959b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  balance: {fileID: 11400000, guid: dd05c48b0c3c77e4d9999d6995f90aad, type: 2}
+  castAnimTrigger: action1
+  attackAnimTrigger: action2
+  moveAnimTrigger: Move
+  moveEndAnimTrigger: MoveEnd
+  deathAnimTrigger: Death
+  orbSummonAnimTrigger: OrbSummon
+  orbDismissAnimTrigger: OrbDismiss
+  attackAnimationDuration: 0.5
+  meleeSE: {fileID: 0}
+  lightningSE: {fileID: 0}
+  flameSE: {fileID: 0}
+  freezeSE: {fileID: 0}
+  lightningEffectDuration: 0.4
+  flameEffectDuration: 0.7
+  freezeEffectDuration: 0.7
   logsManager: {fileID: 0}
   lightning: {fileID: 0}
   flame: {fileID: 0}
+  freeze: {fileID: 0}
   shield: {fileID: 0}
   playerAnimator: {fileID: 2958719478595828330}
   healthBarPrefab: {fileID: 0}
-  mpBarPrefab: {fileID: 0}
+  apBarPrefab: {fileID: 0}
+  damageIndicatorPrefab: {fileID: 0}
+  hitEffectPrefab: {fileID: 9167450929148389231, guid: ef0d7400183614f4e927521d758228fd,
+    type: 3}
+  damageIndicatorColor: {r: 1, g: 0.3, b: 0.3, a: 1}
+  apReductionIndicatorPrefab: {fileID: 0}
+  apReductionColor: {r: 0.3, g: 0.8, b: 1, a: 1}
+  notEnoughAPColor: {r: 1, g: 0.25, b: 0.25, a: 1}
+  notEnoughAPPause: 0.6
   canvas: {fileID: 0}
   healthBarOffsetY: -10
-  mpBarOffsetY: -17
+  apBarOffsetY: -17
   turnFlowManager: {fileID: 0}
   stageConfig: {fileID: 0}
   areaPos:
@@ -142,4 +171,8 @@ MonoBehaviour:
   - {x: 7.4, y: 0.5}
   playerCurrentPos: 0
   playerHealth: 0
-  playerMP: 0
+  playerAP: 0
+  executionLabelOffsetY: 1.2
+  executionLabelFontSize: 0.4
+  executionLabelColor: {r: 1, g: 1, b: 1, a: 1}
+  executionLabelFont: {fileID: 0}

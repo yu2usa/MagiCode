@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b21b9f80b9daa3e448b04e8f0642124a, type: 3}
+  m_Name: BalanceConfig
+  m_EditorClassIdentifier: 
+  maxHealth: 10
+  maxAP: 50
+  attackCost: 10
+  attackDamage: 2
+  lightningCost: 20
+  flameCost: 20
+  freezeCost: 20
+  spellDamage: 4
+  loopBonusCostRate: 0.5
+  hitStopFramesPerDamage: 2
+  maxHitStopFrames: 10
+  finishingHitStopFrames: 14
+  hitStopShake: 0.08

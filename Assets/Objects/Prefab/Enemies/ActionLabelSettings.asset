@@ -15,4 +15,4 @@ MonoBehaviour:
   offsetY: 0.54
   fontSize: 0.5
   color: {r: 1, g: 1, b: 1, a: 1}
-  font: {fileID: 11400000, guid: 79c24fe7765a48b40a010503495116ad, type: 2}
+  font: {fileID: 11400000, guid: c67352955007a17479761e225b12bd38, type: 2}

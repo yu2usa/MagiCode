@@ -34,7 +34,7 @@ MonoBehaviour:
   m_Name: ElementalWizard
   m_EditorClassIdentifier: 
   enemyName: "\u30A8\u30EC\u30E1\u30F3\u30BF\u30EB\u30FB\u30A6\u30A3\u30B6\u30FC\u30C9"
-  enemySprite: {fileID: -5575922434723776097, guid: 60cdbb6c5face4e4c97e49dad93f4ad3,
+  enemySprite: {fileID: 1869658708567500606, guid: 3a16c3a87eb5d5a4bab30c58fcfe4d82,
     type: 3}
   element: 0
   elementPhases: 0200000003000000
@@ -58,7 +58,7 @@ MonoBehaviour:
   attackSE: {fileID: 8300000, guid: 7bd75ed04e8a6804ab9e2949fe1cece4, type: 3}
   slashEffectPrefab: {fileID: 0}
   maxHealth: 15
-  moveDuration: 0.8
+  walkSpeed: 4.5
   regenHealthOnTurnEnd: 0
   punishOverkill: 0
   overkillPunishDamage: 3

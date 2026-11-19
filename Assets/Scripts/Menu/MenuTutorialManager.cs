@@ -46,6 +46,8 @@ public class MenuTutorialManager : MonoBehaviour
     [SerializeField] private Color activeColor = Color.white;
     [Tooltip("発言していないキャラクターのグレーアウト色")]
     [SerializeField] private Color inactiveColor = new Color(0.35f, 0.35f, 0.35f, 1f);
+    [Tooltip("assistantAtEnemyPosition のセリフでアシスタントを置く位置（画面右端の中央から測る。バトル前会話の敵の位置と同じ値）")]
+    [SerializeField] private Vector2 assistantEnemyPosition = new Vector2(-282f, -1f);
 
     [Header("話者名")]
     [SerializeField] private string playerName = "プレイヤー";
@@ -75,8 +77,14 @@ public class MenuTutorialManager : MonoBehaviour
 
     private bool _advanceRequested;
     private bool _skipRequested;
+    // アシスタントの元の置き場所（セリフごとに敵の位置と行き来するので覚えておく）
+    private Vector2 _assistantAnchorMin;
+    private Vector2 _assistantAnchorMax;
+    private Vector2 _assistantPos;
 
-    private void Start()
+    // シーンでは非表示のまま置かれていることがあり、PlayTutorial で表示したその場で初期化したいので Start ではなく Awake で行う
+    // （Start だと次のフレームに走り、再生を始めた会話の窓を閉じてしまう）
+    private void Awake()
     {
         // プレイヤーとアシスタントが向き合うようスプライトの向きを設定
         ApplyFlip(playerSprite,   flipPlayer);
@@ -84,12 +92,19 @@ public class MenuTutorialManager : MonoBehaviour
 
         skipButton?.onClick.AddListener(SkipAll);
 
-        tutorialPanel.SetActive(false);
+        RectTransform assistant = assistantSprite.rectTransform;
+        _assistantAnchorMin = assistant.anchorMin;
+        _assistantAnchorMax = assistant.anchorMax;
+        _assistantPos = assistant.anchoredPosition;
 
-        // 初回入場時のみ自動再生（enableTutorial が ON の場合のみ）
-        if (enableTutorial && !ClearDataManager.IsMenuTutorialSeen())
-            StartCoroutine(PlayTutorial());
+        tutorialPanel.SetActive(false);
     }
+
+    /// <summary>
+    /// 初回入場時に自動で再生するべきか（enableTutorial が ON で、まだ見ていない）。
+    /// 再生するタイミングは MenuEntrance が決める（ステージボタンと線が出てから）
+    /// </summary>
+    public bool ShouldAutoPlay => enableTutorial && !ClearDataManager.IsMenuTutorialSeen();
 
     /// <summary>
     /// チュートリアル会話を最初から再生する。
@@ -97,10 +112,12 @@ public class MenuTutorialManager : MonoBehaviour
     /// </summary>
     public void PlayTutorialFromButton() => StartCoroutine(PlayTutorial());
 
-    private IEnumerator PlayTutorial()
+    public IEnumerator PlayTutorial()
     {
         if (tutorialDialogue == null || tutorialDialogue.Count == 0) yield break;
 
+        // 文字送りなどの処理はこのオブジェクトで動かすので、非表示で置かれていたら表示する
+        gameObject.SetActive(true);
         tutorialPanel.SetActive(true);
         _skipRequested = false;
 
@@ -120,11 +137,14 @@ public class MenuTutorialManager : MonoBehaviour
                 SetSpriteVisible(assistantSprite, entry.showAssistant);
             }
 
+            PlaceAssistant(entry.assistantAtEnemyPosition);
             UpdateSpeakerHighlight(entry.speaker);
 
             if (entry.bounce)
                 StartCoroutine(PlayBounce(GetSpriteForSpeaker(entry.speaker)));
 
+            // ナレーションでは話者名の枠（名前テキストの親）ごと隠す
+            speakerNameText.transform.parent.gameObject.SetActive(entry.ShowsSpeakerName);
             speakerNameText.text = GetSpeakerName(entry.speaker);
             _advanceRequested = false;
 
@@ -158,11 +178,31 @@ public class MenuTutorialManager : MonoBehaviour
     private void Update()
     {
         if (!tutorialPanel.activeSelf) return;
-        if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Return))
+        if (DialogueInput.AdvancePressed())
             _advanceRequested = true;
     }
 
     // --- 内部メソッド ---
+
+    /// <summary>
+    /// アシスタントを元の位置か、バトル前会話の敵と同じ位置（画面右側）に置く。
+    /// 向きは Awake で決めたまま（flipAssistant でプレイヤーの方を向いている）
+    /// </summary>
+    private void PlaceAssistant(bool atEnemyPosition)
+    {
+        RectTransform assistant = assistantSprite.rectTransform;
+        if (!atEnemyPosition)
+        {
+            assistant.anchorMin = _assistantAnchorMin;
+            assistant.anchorMax = _assistantAnchorMax;
+            assistant.anchoredPosition = _assistantPos;
+            return;
+        }
+
+        assistant.anchorMin = new Vector2(1f, 0.5f);
+        assistant.anchorMax = new Vector2(1f, 0.5f);
+        assistant.anchoredPosition = assistantEnemyPosition;
+    }
 
     private void UpdateSpeakerHighlight(DialogueSpeaker speaker)
     {

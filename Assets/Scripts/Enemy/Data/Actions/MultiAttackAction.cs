@@ -31,19 +31,16 @@ public class MultiAttackAction : EnemyAction
 
         bool playerHit = false;
 
+        // 斬撃エフェクトを持たない敵は攻撃モーションだけで攻撃する
+        var slash = context.Enemy.enemySlash;
         var areas = context.Enemy.EnemyAreas;
         foreach (int area in targetAreas)
         {
             if (areas == null || area < 0 || area >= areas.Count)
                 continue;
 
-            // エフェクト再生
-            var slash = context.Enemy.enemySlash;
-            Vector3 slashPos = areas[area];
-            slashPos.y += 0.5f;
-            slash.transform.position = slashPos;
-            slash.SetActive(true);
-            slash.GetComponent<Animator>().SetTrigger(slashAnimationTrigger);
+            if (slash != null)
+                PlayEffect(slash, areas[area]);
             CameraShake.Shake();
 
             // ダメージ判定（1回のみ）
@@ -57,7 +54,16 @@ public class MultiAttackAction : EnemyAction
         }
 
         yield return new WaitForSeconds(animationDuration);
-        context.Enemy.enemySlash.SetActive(false);
+        if (slash != null)
+            slash.SetActive(false);
+    }
+
+    private void PlayEffect(GameObject slash, Vector3 areaPos)
+    {
+        areaPos.y += 0.5f;
+        slash.transform.position = areaPos;
+        slash.SetActive(true);
+        slash.GetComponent<Animator>().SetTrigger(slashAnimationTrigger);
     }
 
     public override string GetDescription()

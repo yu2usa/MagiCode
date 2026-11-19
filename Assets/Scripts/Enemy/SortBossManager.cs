@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using DG.Tweening;
 using UnityEngine;
 
 /// <summary>
@@ -18,7 +17,8 @@ public class SortBossManager : MonoBehaviour
 
     [Header("スワップアニメーション")]
     [SerializeField] private float swapDuration = 0.5f;
-    [SerializeField] private Ease swapEase = Ease.OutQuad;
+    [Tooltip("入れ替え移動の進み方（横軸: 経過割合、縦軸: 進み具合）")]
+    [SerializeField] private AnimationCurve swapCurve = new AnimationCurve(new Keyframe(0f, 0f, 2f, 2f), new Keyframe(1f, 1f, 0f, 0f));
 
     private void Awake()
     {
@@ -101,7 +101,7 @@ public class SortBossManager : MonoBehaviour
 
     /// <summary>
     /// エリア j のガードとエリア k のガードを入れ替える
-    /// DOTween でスムーズに移動し、完了後にエリア番号とボスの防御倍率を更新する
+    /// スムーズに移動し、完了後にエリア番号とボスの防御倍率を更新する
     /// </summary>
     public IEnumerator SwapGuards(int j, int k)
     {
@@ -118,11 +118,9 @@ public class SortBossManager : MonoBehaviour
         Vector3 targetForJ = new Vector3(areas[k].x, areas[k].y, guardJ.transform.position.z);
         Vector3 targetForK = new Vector3(areas[j].x, areas[j].y, guardK.transform.position.z);
 
-        // 既存のTweenをキャンセルしてスワップ移動を開始
-        DOTween.Kill(guardJ.transform);
-        DOTween.Kill(guardK.transform);
-        guardJ.transform.DOMove(targetForJ, swapDuration).SetEase(swapEase);
-        yield return guardK.transform.DOMove(targetForK, swapDuration).SetEase(swapEase).WaitForCompletion();
+        // 実行中の移動は CharacterMotion が打ち切るので、そのままスワップ移動を開始
+        StartCoroutine(CharacterMotion.MoveOver(guardJ.transform, targetForJ, swapDuration, swapCurve));
+        yield return CharacterMotion.MoveOver(guardK.transform, targetForK, swapDuration, swapCurve);
 
         // エリア番号を更新
         guardJ.enemyCurrentPos = k;

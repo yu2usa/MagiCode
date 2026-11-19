@@ -74,7 +74,7 @@ MonoBehaviour:
   m_Name: KeyGolem
   m_EditorClassIdentifier: 
   enemyName: "\u30B3\u30FC\u30C9\u30FB\u30B4\u30FC\u30EC\u30E0"
-  enemySprite: {fileID: 1021369689971768109, guid: f2381ec6398bb5b42b9709e64c731b62,
+  enemySprite: {fileID: -2595024724838364490, guid: 48e5b2d1a439a184aadcdb1fd9252de9,
     type: 3}
   element: 0
   elementPhases: 
@@ -95,7 +95,7 @@ MonoBehaviour:
   slashEffectPrefab: {fileID: 3288845867411983803, guid: a17d2fa550b5be34ba33aaca22471c93,
     type: 3}
   maxHealth: 20
-  moveDuration: 0.8
+  walkSpeed: 5.5
   regenHealthOnTurnEnd: 0
   punishOverkill: 0
   overkillPunishDamage: 3

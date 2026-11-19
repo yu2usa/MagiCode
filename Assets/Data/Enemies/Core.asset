@@ -34,7 +34,7 @@ MonoBehaviour:
   m_Name: Core
   m_EditorClassIdentifier: 
   enemyName: "\u30B3\u30A2"
-  enemySprite: {fileID: -7215981363838934281, guid: 88cbd8812ee8101439e86fe3119cc618,
+  enemySprite: {fileID: 8977889880991071790, guid: d34c96be884508d4ca02e1d75194e28f,
     type: 3}
   element: 0
   elementPhases: 
@@ -54,7 +54,7 @@ MonoBehaviour:
   attackSE: {fileID: 8300000, guid: 3845dffe395326145b739d24096c58af, type: 3}
   slashEffectPrefab: {fileID: 0}
   maxHealth: 30
-  moveDuration: 0.8
+  walkSpeed: 4.5
   regenHealthOnTurnEnd: 0
   punishOverkill: 0
   overkillPunishDamage: 3

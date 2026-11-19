@@ -18,10 +18,6 @@ public class DamageIndicator : MonoBehaviour
     [Header("Text Settings")]
     [Tooltip("フォントサイズ")]
     public float fontSize = 5f;
-    [Tooltip("テキストの色")]
-    public Color textColor = Color.white;
-    [Tooltip("クリティカル時の色")]
-    public Color criticalColor = Color.yellow;
 
     // TMP_Textは TextMeshPro と TextMeshProUGUI の共通基底クラス
     private TMP_Text _textMesh;
@@ -43,13 +39,11 @@ public class DamageIndicator : MonoBehaviour
     }
 
     /// <summary>
-    /// ダメージを表示してアニメーション
+    /// ダメージを表示してアニメーション（色は与えた側・受けた側で呼び出し元が指定する）
     /// </summary>
-    public void Show(int damage, bool isCritical = false)
+    public void Show(int damage, Color color)
     {
-        _textMesh.text = damage.ToString();
-        _textMesh.color = isCritical ? criticalColor : textColor;
-        PlayFloatAnimation();
+        ShowText(damage.ToString(), color);
     }
 
     /// <summary>
@@ -117,12 +111,12 @@ public class DamageIndicator : MonoBehaviour
     /// <summary>
     /// ダメージインジケーターを生成して表示（フォールバック用）
     /// </summary>
-    public static void Spawn(Vector3 position, int damage, bool isCritical = false)
+    public static void Spawn(Vector3 position, int damage, Color color)
     {
         GameObject obj = new GameObject("DamageIndicator");
         obj.transform.position = position + Vector3.up * 0.5f;
         var indicator = obj.AddComponent<DamageIndicator>();
-        indicator.Show(damage, isCritical);
+        indicator.Show(damage, color);
     }
 
     /// <summary>
@@ -170,11 +164,11 @@ public class DamageIndicator : MonoBehaviour
     /// Prefabからダメージインジケーターを生成
     /// UIプレハブ（RectTransform）はCanvas内にインスタンス化し、ワールド座標を変換して配置
     /// </summary>
-    public static void SpawnFromPrefab(GameObject prefab, Vector3 worldPosition, int damage, bool isCritical = false)
+    public static void SpawnFromPrefab(GameObject prefab, Vector3 worldPosition, int damage, Color color)
     {
         if (prefab == null)
         {
-            Spawn(worldPosition, damage, isCritical);
+            Spawn(worldPosition, damage, color);
             return;
         }
 
@@ -190,7 +184,7 @@ public class DamageIndicator : MonoBehaviour
 
             if (canvas == null)
             {
-                Spawn(worldPosition, damage, isCritical);
+                Spawn(worldPosition, damage, color);
                 return;
             }
 
@@ -210,7 +204,7 @@ public class DamageIndicator : MonoBehaviour
             var indicator = obj.GetComponent<DamageIndicator>();
             if (indicator == null)
                 indicator = obj.AddComponent<DamageIndicator>();
-            indicator.Show(damage, isCritical);
+            indicator.Show(damage, color);
         }
         else
         {
@@ -219,7 +213,7 @@ public class DamageIndicator : MonoBehaviour
             var indicator = obj.GetComponent<DamageIndicator>();
             if (indicator == null)
                 indicator = obj.AddComponent<DamageIndicator>();
-            indicator.Show(damage, isCritical);
+            indicator.Show(damage, color);
         }
     }
 }

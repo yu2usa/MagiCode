@@ -22,4 +22,4 @@ MonoBehaviour:
     type: 3}
   animatorTrigger: Strike
   preAttackDelay: 0.5
-  effectDuration: 0.7
+  effectDuration: 1.5500002

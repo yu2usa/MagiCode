@@ -31,29 +31,52 @@ public class AttackWarningSystem : MonoBehaviour
     [Tooltip("ボタン押下で開閉する敵行動通知ウィンドウ")]
     [SerializeField] private GameObject enemyAttackNotificationWindow;
 
-    [Tooltip("ウィンドウを閉じるボタン（Button コンポーネント付きのパネル）")]
+    [Tooltip("ウィンドウの外を押して閉じるボタン（画面全体の暗幕）")]
     [SerializeField] private Button closeButton;
 
-    [Tooltip("ウィンドウが右からスライドインする距離（Canvas ピクセル単位）")]
-    [SerializeField] private float windowSlideInDistance = 420f;
+    [Tooltip("右からスライドする通知ウィンドウ本体")]
+    [SerializeField] private RectTransform window;
 
+    [Tooltip("ウィンドウの後ろで画面をグレーアウトする暗幕（その場でフェードする）")]
+    [SerializeField] private Image dim;
+
+    // 開いた直後のフレームは表示の準備で重くなりやすいので、動き出しがゆっくりなイージングにする
     [Tooltip("ウィンドウのスライドイン時間（秒）")]
-    [SerializeField] private float windowSlideInDuration = 0.3f;
+    [SerializeField] private float windowSlideInDuration = 0.4f;
+    [SerializeField] private Ease windowSlideInEase = Ease.InOutCubic;
+    [Tooltip("ウィンドウのスライドアウト時間（秒）")]
+    [SerializeField] private float windowSlideOutDuration = 0.25f;
+    [SerializeField] private Ease windowSlideOutEase = Ease.InQuad;
 
-    // 通知ウィンドウの RectTransform とデフォルト位置（初期化時に取得）
-    private RectTransform _windowRect;
-    private float _windowDefaultX;
+    [Header("Danger Zone")]
+    [Tooltip("攻撃されるエリアの地面に重ねる帯の色（点滅で一番濃いとき）")]
+    [SerializeField] private Color dangerZoneColor = new Color(1f, 0.1f, 0.1f, 0.6f);
+    [Tooltip("点滅で一番薄いときの濃さ（0 にすると消えた瞬間に気づきにくい）")]
+    [SerializeField] private float dangerZoneMinAlpha = 0.15f;
+    [Tooltip("帯の上端のY座標（キャラが立つ草の上端あたり）")]
+    [SerializeField] private float dangerZoneTop = 0.72f;
+    [Tooltip("帯の下端のY座標（エリア番号の下まで）")]
+    [SerializeField] private float dangerZoneBottom = -0.6f;
+    [Tooltip("隣のエリアの帯とくっつかないよう、左右を詰める幅")]
+    [SerializeField] private float dangerZoneGap = 0.1f;
+    [SerializeField] private float dangerZoneBlinkDuration = 0.5f;
+
+    // ウィンドウの表示位置と暗幕の濃さ（初期化時に取得）
+    private float _windowShownX;
+    private float _dimAlpha;
+    private bool _isOpen;
 
     // 生成済みの警告ボタン一覧（非表示時に破棄する）
     private readonly List<GameObject> _spawnedButtons = new List<GameObject>();
+    // 生成済みの危険エリアの帯（非表示時に破棄する）
+    private readonly List<SpriteRenderer> _dangerZones = new List<SpriteRenderer>();
+    // 帯に使う1ワールド単位四方の白い絵
+    private Sprite _whiteSprite;
 
     private void Awake()
     {
-        if (enemyAttackNotificationWindow != null)
-        {
-            _windowRect = enemyAttackNotificationWindow.GetComponent<RectTransform>();
-            _windowDefaultX = _windowRect.anchoredPosition.x;
-        }
+        _windowShownX = window.anchoredPosition.x;
+        _dimAlpha = dim.color.a;
 
         // 閉じるボタンにリスナーを登録
         closeButton?.onClick.AddListener(CloseNotificationWindow);
@@ -110,7 +133,41 @@ public class AttackWarningSystem : MonoBehaviour
             trigger.triggers.Add(entry);
 
             _spawnedButtons.Add(btn);
+            SpawnDangerZone(area, areaLabelObjects);
         }
+    }
+
+    // 攻撃されるエリアの地面を赤く点滅させ、「！」を開かなくても逃げ先が分かるようにする。
+    // 幅は隣のエリアとの中間まで。地面（Field）と同じ描画順で手前に置き、キャラやエリア番号より奥に描く
+    private void SpawnDangerZone(int area, List<GameObject> areaLabelObjects)
+    {
+        float center = areaLabelObjects[area].transform.position.x;
+        float left = area > 0
+            ? (areaLabelObjects[area - 1].transform.position.x + center) / 2f
+            : center - HalfAreaSpacing(areaLabelObjects);
+        float right = area < areaLabelObjects.Count - 1
+            ? (areaLabelObjects[area + 1].transform.position.x + center) / 2f
+            : center + HalfAreaSpacing(areaLabelObjects);
+        left += dangerZoneGap;
+        right -= dangerZoneGap;
+
+        if (_whiteSprite == null)
+            _whiteSprite = Sprite.Create(Texture2D.whiteTexture, new Rect(0, 0, 4, 4), new Vector2(0.5f, 0.5f), 4f);
+
+        var zone = new GameObject($"DangerZone_{area}").AddComponent<SpriteRenderer>();
+        zone.sprite = _whiteSprite;
+        zone.sortingOrder = -1;
+        zone.transform.position = new Vector3((left + right) / 2f, (dangerZoneTop + dangerZoneBottom) / 2f, 0f);
+        zone.transform.localScale = new Vector3(right - left, dangerZoneTop - dangerZoneBottom, 1f);
+        zone.color = new Color(dangerZoneColor.r, dangerZoneColor.g, dangerZoneColor.b, dangerZoneMinAlpha);
+        zone.DOFade(dangerZoneColor.a, dangerZoneBlinkDuration).SetLoops(-1, LoopType.Yoyo).SetEase(Ease.InOutSine);
+        _dangerZones.Add(zone);
+    }
+
+    // 端のエリアは、隣のエリアとの間隔の半分だけ外側まで塗る
+    private static float HalfAreaSpacing(List<GameObject> areaLabelObjects)
+    {
+        return Mathf.Abs(areaLabelObjects[1].transform.position.x - areaLabelObjects[0].transform.position.x) / 2f;
     }
 
     /// <summary>
@@ -126,40 +183,59 @@ public class AttackWarningSystem : MonoBehaviour
                 Destroy(btn);
         }
         _spawnedButtons.Clear();
+
+        foreach (var zone in _dangerZones)
+        {
+            zone.DOKill();
+            Destroy(zone.gameObject);
+        }
+        _dangerZones.Clear();
     }
 
-    // ボタン押下で通知ウィンドウをトグル
+    // ボタン押下で通知ウィンドウをトグル（閉じるアニメーション中に押したら開き直す）
     private void ToggleNotificationWindow()
     {
-        if (enemyAttackNotificationWindow == null) return;
-
-        if (enemyAttackNotificationWindow.activeSelf)
+        if (_isOpen)
             CloseNotificationWindow();
         else
             OpenNotificationWindow();
     }
 
-    // 右からスライドインしてウィンドウを開く
+    // 背景はその場でグレーアウトし、ウィンドウは右の画面外からスライドインする
     private void OpenNotificationWindow()
     {
-        if (_windowRect == null) return;
-
-        // 進行中のアニメーションを止めてから開始
-        _windowRect.DOKill();
-
+        _isOpen = true;
+        KillWindowTweens();
         enemyAttackNotificationWindow.SetActive(true);
 
-        // 右端外側から始めてデフォルト位置へスライドイン
-        _windowRect.anchoredPosition = new Vector2(_windowDefaultX + windowSlideInDistance, _windowRect.anchoredPosition.y);
-        _windowRect.DOAnchorPosX(_windowDefaultX, windowSlideInDuration).SetEase(Ease.OutQuart);
+        window.anchoredPosition = new Vector2(WindowHiddenX(), window.anchoredPosition.y);
+        window.DOAnchorPosX(_windowShownX, windowSlideInDuration).SetEase(windowSlideInEase);
+        dim.color = new Color(dim.color.r, dim.color.g, dim.color.b, 0f);
+        dim.DOFade(_dimAlpha, windowSlideInDuration);
     }
 
-    // ウィンドウを閉じる（アニメーションなし）
+    // ウィンドウを右へ引っ込め、背景を元に戻してから非表示にする
     private void CloseNotificationWindow()
     {
-        if (enemyAttackNotificationWindow == null) return;
+        if (!_isOpen) return;
+        _isOpen = false;
+        KillWindowTweens();
 
-        _windowRect?.DOKill();
-        enemyAttackNotificationWindow.SetActive(false);
+        dim.DOFade(0f, windowSlideOutDuration);
+        window.DOAnchorPosX(WindowHiddenX(), windowSlideOutDuration)
+            .SetEase(windowSlideOutEase)
+            .OnComplete(() => enemyAttackNotificationWindow.SetActive(false));
+    }
+
+    // ウィンドウ幅ぶん右へずらせば画面外になる
+    private float WindowHiddenX()
+    {
+        return _windowShownX + window.rect.width;
+    }
+
+    private void KillWindowTweens()
+    {
+        window.DOKill();
+        dim.DOKill();
     }
 }

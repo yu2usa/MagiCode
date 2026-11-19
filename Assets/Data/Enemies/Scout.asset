@@ -46,7 +46,7 @@ MonoBehaviour:
   m_Name: Scout
   m_EditorClassIdentifier: 
   enemyName: "\u30B3\u30FC\u30C9\u306E\u885B\u5175"
-  enemySprite: {fileID: 1733907769843567112, guid: 80f2c0108cecf3445a59945f7b944635,
+  enemySprite: {fileID: -7325501039085358532, guid: 869062cec958c0f4e8d50dcc0a07c49a,
     type: 3}
   element: 0
   elementPhases: 
@@ -64,10 +64,9 @@ MonoBehaviour:
   deathAnimatorTrigger: Death
   deathAnimationDuration: 0.5
   attackSE: {fileID: 8300000, guid: ea5538f8c25fa744e883e3f363cf145b, type: 3}
-  slashEffectPrefab: {fileID: 2788011686351177358, guid: 257adbe5e39098c40a7c1c1bc88b4f14,
-    type: 3}
+  slashEffectPrefab: {fileID: 0}
   maxHealth: 8
-  moveDuration: 0.8
+  walkSpeed: 4.5
   regenHealthOnTurnEnd: 0
   punishOverkill: 0
   overkillPunishDamage: 3

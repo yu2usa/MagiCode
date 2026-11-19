@@ -96,8 +96,8 @@ public class EnemyData : ScriptableObject
 
     [Header("ステータス")]
     public int maxHealth = 10;
-    [Tooltip("移動速度（秒）。小さいほど速い")]
-    public float moveDuration = 0.8f;
+    [Tooltip("歩行速度（ワールド単位/秒）。歩行アニメーションの足運びに合わせる")]
+    public float walkSpeed = 4.5f;
     [Tooltip("ターン終了時（敵攻撃フェーズ完了後）にHPを全回復する")]
     public bool regenHealthOnTurnEnd = false;
 

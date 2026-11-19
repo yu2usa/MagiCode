@@ -13,6 +13,7 @@ ScriptedImporter:
   assetBundleName: 
   assetBundleVariant: 
   script: {fileID: 11500000, guid: 62a9f0aa5b59740cfbadc7e5f9823bb0, type: 3}
+  importerVersion: 2
   textureImporterSettings:
     alphaSource: 1
     mipMapMode: 0
@@ -82,6 +83,7 @@ ScriptedImporter:
     defaultPivotSpace: 0
     defaultPivotAlignment: 7
     customPivotPosition: {x: 0.5, y: 0.5}
+    mosaicPadding: 4
     spritePadding: 0
     generateModelPrefab: 1
     generateAnimationClips: 1
@@ -94,6 +96,7 @@ ScriptedImporter:
     defaultPivotSpace: 0
     defaultPivotAlignment: 7
     customPivotPosition: {x: 0.5, y: 0.5}
+    mosaicPadding: 4
     spritePadding: 0
     generateModelPrefab: 1
     generateAnimationClips: 1
@@ -108,6 +111,7 @@ ScriptedImporter:
     pivot: {x: 0, y: 0}
     alignment: 0
     border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
     rect:
       serializedVersion: 2
       x: 0
@@ -126,15 +130,16 @@ ScriptedImporter:
   animatedSpriteImportData:
   - name: Shockwave_1_Frame_0
     originalName: 
-    pivot: {x: 0, y: 0}
+    pivot: {x: 0.49999997, y: -1.7}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
     rect:
       serializedVersion: 2
-      x: 47
-      y: 34
-      width: 0
-      height: 0
+      x: 4
+      y: 56
+      width: 26
+      height: 10
     spriteID: 6b65fce9d0ca1854d8c954d327675c11
     spriteBone: []
     spriteOutline: []
@@ -143,18 +148,19 @@ ScriptedImporter:
     indices: 
     edges: []
     tessellationDetail: 0
-    uvTransform: {x: -1, y: -14}
+    uvTransform: {x: 4, y: 56}
   - name: Shockwave_1_Frame_1
     originalName: 
-    pivot: {x: 0.49999997, y: -1.7}
+    pivot: {x: 0.48571432, y: -1}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
     rect:
       serializedVersion: 2
       x: 4
-      y: 56
-      width: 26
-      height: 10
+      y: 34
+      width: 35
+      height: 14
     spriteID: e0a92c9acfc8fe746a38afa79fa5f1e1
     spriteBone: []
     spriteOutline: []
@@ -163,39 +169,20 @@ ScriptedImporter:
     indices: 
     edges: []
     tessellationDetail: 0
-    uvTransform: {x: 4, y: 56}
-  - name: Shockwave_1_Frame_2
-    originalName: 
-    pivot: {x: 0.48571432, y: -1}
-    alignment: 9
-    border: {x: 0, y: 0, z: 0, w: 0}
-    rect:
-      serializedVersion: 2
-      x: 4
-      y: 34
-      width: 35
-      height: 14
-    spriteID: c0b7285ee970c2a4db9291673b869a7e
-    spriteBone: []
-    spriteOutline: []
-    vertices: []
-    spritePhysicsOutline: []
-    indices: 
-    edges: []
-    tessellationDetail: 0
     uvTransform: {x: 4, y: 34}
-  - name: Shockwave_1_Frame_3
+  - name: Shockwave_1_Frame_2
     originalName: 
     pivot: {x: 0.47619048, y: -0.45454547}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
     rect:
       serializedVersion: 2
       x: 4
       y: 4
       width: 42
       height: 22
-    spriteID: bd8c8a4c4a974ca48b98583dbdd1d57e
+    spriteID: c0b7285ee970c2a4db9291673b869a7e
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -207,44 +194,44 @@ ScriptedImporter:
   spriteSheetImportData: []
   asepriteLayers:
   - layerIndex: 0
-    guid: -299493973
+    uuid:
+      value0: 3288087063
+      value1: 0
+      value2: 0
+      value3: 0
+    guid: -1006880233
     name: Shockwave_1
     layerFlags: 0
     layerType: 0
     blendMode: 0
     cells:
-    - name: Shockwave_1_Frame_0
-      frameIndex: 0
-      cellRect:
-        x: 0
-        y: 0
-        width: 48
-        height: 48
-      spriteId: 6b65fce9d0ca1854d8c954d327675c11
-    - name: Shockwave_1_Frame_1
+    - name: Frame_1
       frameIndex: 1
+      additiveSortOrder: 0
       cellRect:
         x: 11
         y: 17
         width: 26
         height: 10
-      spriteId: e0a92c9acfc8fe746a38afa79fa5f1e1
-    - name: Shockwave_1_Frame_2
+      spriteId: 6b65fce9d0ca1854d8c954d327675c11
+    - name: Frame_2
       frameIndex: 2
+      additiveSortOrder: 0
       cellRect:
         x: 7
         y: 14
         width: 35
         height: 14
-      spriteId: c0b7285ee970c2a4db9291673b869a7e
-    - name: Shockwave_1_Frame_3
+      spriteId: e0a92c9acfc8fe746a38afa79fa5f1e1
+    - name: Frame_3
       frameIndex: 3
+      additiveSortOrder: 0
       cellRect:
         x: 4
         y: 10
         width: 42
         height: 22
-      spriteId: bd8c8a4c4a974ca48b98583dbdd1d57e
+      spriteId: c0b7285ee970c2a4db9291673b869a7e
     linkedCells: []
     parentIndex: -1
   platformSettings:
@@ -308,6 +295,8 @@ ScriptedImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     androidETC2FallbackOverride: 0
+  generatePhysicsShape: 0
   secondarySpriteTextures: []
   spritePackingTag: 
   canvasSize: {x: 48, y: 48}
+  previousTextureSize: {x: 64, y: 128}

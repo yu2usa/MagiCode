@@ -14,9 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   actionName: "\u901A\u5E38\u653B\u6483"
   telegraphMessage: "\u30AA\u30FC\u30AF\u304C\u6B66\u5668\u3092\u632F\u308A\u304B\u3076\u3063\u305F\uFF01"
+  enemyAnimationTrigger: 
   damage: 3
   targetArea: -1
-  animationTrigger: Slash
+  useShockwave: 0
+  slashAnimationTrigger: Slash
   preAttackDelay: 0
   animationDuration: 0.83
 --- !u!114 &-2461087637923141756
@@ -33,6 +35,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   actionName: "\u30C1\u30E3\u30FC\u30B8"
   telegraphMessage: "\u30AA\u30FC\u30AF\u304C\u529B\u3092\u6E9C\u3081\u3066\u3044\u308B...\u6B21\u306E\u653B\u6483\u306F\u5F37\u529B\u3060\uFF01"
+  enemyAnimationTrigger: 
   chargeDuration: 1
   damageMultiplier: 2
   chargeColor: {r: 1, g: 0.3, b: 0.3, a: 1}
@@ -50,8 +53,32 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyName: "\u7A81\u6483\u30AA\u30FC\u30AF"
   enemySprite: {fileID: 0}
+  element: 0
+  elementPhases: 
+  guardReflectDamage: 1
+  elementAnimatorTriggers: []
+  flipSpriteInDialogue: 0
+  scale: {x: 1, y: 1, z: 1}
+  positionOffsetY: 0
+  animatorController: {fileID: 0}
+  attackAnimTrigger: Action
+  moveAnimTrigger: Move
+  moveEndAnimTrigger: MoveEnd
+  deathAnimTrigger: Death
+  deathAnimationType: 1
+  deathAnimatorTrigger: Death
+  deathAnimationDuration: 0.5
+  attackSE: {fileID: 0}
+  slashEffectPrefab: {fileID: 0}
   maxHealth: 12
-  attackDamage: 3
+  walkSpeed: 4.5
+  regenHealthOnTurnEnd: 0
+  punishOverkill: 0
+  overkillPunishDamage: 3
+  useKeyGolemMechanic: 0
+  sortRole: 0
+  assignedNumber: 0
+  isInvincible: 0
   attackPhaseActions:
   - action: {fileID: -5263851912377017015}
     weight: 0.7
@@ -78,6 +105,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   actionName: "\u63A5\u8FD1"
   telegraphMessage: 
+  enemyAnimationTrigger: 
   moveType: 4
   targetPosition: 0
   moveDuration: 0.6
